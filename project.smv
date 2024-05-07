@@ -1,0 +1,26 @@
+MODULE main
+
+VAR
+-- board:array 0 .. 10 of array 0 .. 18 of {"@" , "+", "$", "*", "#", ".", "_"};
+
+board:array 0 .. 8 of array 0 .. 7 of {"@" , "+", "$", "*", "#", ".", "_"};
+
+
+ASSIGN
+	init(board[0][0]) := "#"; init(board[0][1]) := "#";init(board[0][2]) := "#";init(board[0][3]) := "#";init(board[0][4]) := "#";init(board[0][5]) := "#"; init(board[0][6]) := "#";init(board[0][7]) := "#"; 
+
+	init(board[1][0]) := "#"; init(board[1][1]) := "#";init(board[1][2]) := "#";init(board[1][3]) := "_";init(board[1][4]) := "_";init(board[1][5]) := "_"; init(board[1][6]) := "#";init(board[1][7]) := "#"; 
+
+	init(board[2][0]) := "#"; init(board[2][1]) := ".";init(board[2][2]) := "_";init(board[2][3]) := "_";init(board[2][4]) := "_";init(board[2][5]) := "_"; init(board[2][6]) := "#";init(board[2][7]) := "#"; 
+
+	init(board[3][0]) := "#"; init(board[3][1]) := "#";init(board[3][2]) := "#";init(board[3][3]) := "_";init(board[3][4]) := "$";init(board[3][5]) := "."; init(board[3][6]) := "#";init(board[3][7]) := "#"; 
+
+	init(board[4][0]) := "#"; init(board[4][1]) := ".";init(board[4][2]) := "#";init(board[4][3]) := "#";init(board[4][4]) := "$";init(board[4][5]) := "_"; init(board[4][6]) := "#";init(board[4][7]) := "#"; 
+
+	init(board[5][0]) := "#"; init(board[5][1]) := "_";init(board[5][2]) := "#";init(board[5][3]) := "_";init(board[5][4]) := ".";init(board[5][5]) := "_"; init(board[5][6]) := "#";init(board[5][7]) := "#"; 
+
+	init(board[6][0]) := "#"; init(board[6][1]) := "$";init(board[6][2]) := "_";init(board[6][3]) := "*";init(board[6][4]) := "$";init(board[6][5]) := "$"; init(board[6][6]) := ".";init(board[6][7]) := "#"; 
+
+	init(board[7][0]) := "#"; init(board[7][1]) := "_";init(board[7][2]) := "_";init(board[7][3]) := "_";init(board[7][4]) := ".";init(board[7][5]) := "_"; init(board[7][6]) := "_";init(board[7][7]) := "#"; 
+
+	init(board[8][0]) := "#"; init(board[8][1]) := "#";init(board[8][2]) := "#";init(board[8][3]) := "#";init(board[8][4]) := "#";init(board[8][5]) := "#"; init(board[8][6]) := "#";init(board[8][7]) := "#";
