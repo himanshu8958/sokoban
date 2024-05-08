@@ -27,7 +27,7 @@ direction : {l, r, u, d, stop};
 board:array 0 .. 8 of array 0 .. 7 of {"@" , "+", "$", "*", "#", ".", "_"};
 
 ASSIGN
-	init(board[0][0]) := "#"; init(board[0][1]) :=
+ 	init(board[0][0]) := "#"; init(board[0][1]) :=
 	"#";init(board[0][2]) := "#";init(board[0][3]) :=
 	"#";init(board[0][4]) := "#";init(board[0][5]) := "#";
 	init(board[0][6]) := "#";init(board[0][7]) := "#"; 
@@ -78,24 +78,33 @@ ASSIGN
 
 	-- The transitions
 
+	next(direction) :=
+			case
+				left & right & up & down		: {l, r, u, d};
+
+				left & right & up & !down   		: {l, r, u};
+				left & right & !up & down 		: {l, r, d};
+				left & !right & up & down 		: {l, u, d};
+				!left & right & up & down 		: {u, r, d};
+
+				!left & !right & up & down		: {u, d};
+				!left & right & !up & down		: {r, d};
+				!left & right & up & !down		: {r, u};
+				left & !right & !up & down		: {l, d};
+				left & !right & up & !down		: {l, u};
+				left & right & !up & !down		: {l, r};
+
+				left & !right & !up & !down		: {l};
+				!left & right & !up & !down		: {r};
+				!left & !right & up & !down		: {u};
+				!left & !right & !up & down		: {d};
+
+				-- !left & !right & !up & !down		: {stop};
+
+			esac;
+
 	next(row) :=
 		  case
-			-- only one of {row, col} can change in a step
-			next(col) != col : row;
-
-			-- 1. must not go off the board.
-			-- 2. column must not change.
-			-- 3. (row+1, col) must either be floor(goal) or a
-			--box with next place being floor(goal).
-
-			(row + 1) <= rows &
-			next(col) = col &
-			(board[row + 1][col] = "_"| board[row + 1][col] = "." |
-			board[row +1][col] = "$" & row + 2 <= rows  & (board[row+2][col] =
-			"_" | board[row+2][col] = "."))
-			: row + 1;
-
-
+			next(direction) = d  : row + 1;
+			next(direction) = u : row - 1;
 		esac;
-		
-	
