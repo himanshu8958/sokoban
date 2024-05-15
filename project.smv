@@ -45,42 +45,45 @@ ASSIGN
 
 	next(direction) :=
 			case
-				left : {l};
+				-- -- left : {l};
+				-- (col - 1 > 0 &
+				-- (board[row][col - 1] = "_" | board[row ][col - 1]  = "." |
+				-- (board[row][col - 1] = "$" & col - 2 > 0 & (board[row][col - 2] = "_" | board[row][col - 2] = ".")))) : {l};
 				
-				-- left & right & up & down		: {l, r, u, d};
+				left & right & up & down		: {l, r, u, d};
 
-				-- left & right & up & !down   		: {l, r, u};
-				-- left & right & !up & down 		: {l, r, d};
-				-- left & !right & up & down 		: {l, u, d};
-				-- !left & right & up & down 		: {u, r, d};
+				left & right & up & !down   		: {l, r, u};
+				left & right & !up & down 		: {l, r, d};
+				left & !right & up & down 		: {l, u, d};
+				!left & right & up & down 		: {u, r, d};
 
-				-- !left & !right & up & down		: {u, d};
-				-- !left & right & !up & down		: {r, d};
-				-- !left & right & up & !down		: {r, u};
-				-- left & !right & !up & down		: {l, d};
-				-- left & !right & up & !down		: {l, u};
-				-- left & right & !up & !down		: {l, r};
+				!left & !right & up & down		: {u, d};
+				!left & right & !up & down		: {r, d};
+				!left & right & up & !down		: {r, u};
+				left & !right & !up & down		: {l, d};
+				left & !right & up & !down		: {l, u};
+				left & right & !up & !down		: {l, r};
 
-				-- left & !right & !up & !down		: {l};
-				-- !left & right & !up & !down		: {r};
-				-- !left & !right & up & !down		: {u};
-				-- !left & !right & !up & down		: {d};
+				left & !right & !up & !down		: {l};
+				!left & right & !up & !down		: {r};
+				!left & !right & up & !down		: {u};
+				!left & !right & !up & down		: {d};
 
-				-- !left & !right & !up & !down		: {stop};
+				!left & !right & !up & !down		: {stop};
 
 			esac;
 
 		next (col) :=
 	       	    case
-			next(direction) = l : col - 1;
-			next(direction) = r : col + 1;
+			next(direction) = l & left : col - 1;
+			next(direction) = r & right : col + 1;
 			TRUE : col;
  		esac;
 
 		next (row) :=
 	       	    case
-			next(direction) = d : row - 1;
-			next(direction) = u : row + 1;
+			next(direction) = d & down : row - 1;
+			next(direction) = u & up : row + 1;
 			TRUE : row;
 		esac;
 
