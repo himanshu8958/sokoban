@@ -10,21 +10,27 @@ direction : {l, r, u, d, stop};
 board:array 0 .. 8 of array 0 .. 7 of {"@" , "+", "$", "*", "#", ".", "_"};
 
 DEFINE
+boxRight := board[row][col + 1] = "$" | board[row][col + 1] = "*";
+boxLeft  := board[row][col - 1] = "$" | board[row][col - 1] = "*";
+boxDown  := board[row - 1][col] = "$" | board[row - 1][col] = "*";
+boxUp    := board[row + 1][col] = "$" | board[row + 1][col] = "*";
+
 up := (row + 1 < rows &												
 (board[row + 1][ col] = "_" | board[row + 1 ][col]  = "." |							
-(board[row + 1][col] = "$" & row + 2 < rows & (board[row + 2][col] = "_" | board[row + 2][col] = "."))));
+(boxUp & row + 2 < rows & (board[row + 2][col] = "_" | board[row + 2][col] = "."))));
 
 down := (row - 1 > 0 &
 (board[row - 1][ col] = "_" | board[row - 1 ][col]  = "." |
-(board[row - 1][col] = "$" & row - 2 >= 0 & (board[row - 2][col] = "_" | board[row - 2][col] = "."))));
+(boxDown & row - 2 >= 0 & (board[row - 2][col] = "_" | board[row - 2][col] = "."))));
 
 right := (col + 1 < cols &
 (board[row][col + 1] = "_" | board[row ][col + 1]  = "." |
-(board[row][col + 1] = "$" & col + 2 < cols & (board[row][col + 2] = "_" | board[row][col + 2] = "."))));
+(boxRight & col + 2 < cols & (board[row][col + 2] = "_" | board[row][col + 2] = "."))));
 
 left := (col - 1 > 0 &
 (board[row][col - 1] = "_" | board[row ][col - 1]  = "." |
-(board[row][col - 1] = "$" & col - 2 > 0 & (board[row][col - 2] = "_" | board[row][col - 2] = "."))));
+(boxLeft & col - 2 > 0 & (board[row][col - 2] = "_" | board[row][col - 2] = "."))));
+
 
 ASSIGN
  	init(board[8][0]) := "#"; init(board[8][1]) :="#";init(board[8][2]) := "#";init(board[8][3]) :="#";init(board[8][4]) := "#";init(board[8][5]) := "#";init(board[8][6]) := "#";init(board[8][7]) := "#"; 
