@@ -5,12 +5,20 @@ public class Board {
     char[][] cell;
     int rows = 0;
     int cols = 0;
-
+	
 	public boolean exists(int x, int y) {
 		if( 0 <= x & x <= rows &
 		 0 <= y & y <= cols)
 			return true;
 		return false;
+	}
+	public void printBoard() {
+		for ( int r = 0; r < rows; r++){
+			for( int c = 0; c < cols; c++) {
+				System.out.print(cell[r][c]);
+			}
+			System.out.println();
+		}
 	}
 
     public static Board readBoard (String path) throws FileNotFoundException {
