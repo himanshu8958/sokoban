@@ -76,17 +76,19 @@ public class Player {
 
             out.append("next (col) :=\n" +
 	       	    "case\n" + 
-			    "next(direction) = l & left : col - 1;\n" + 
-			    "next(direction) = r & right : col + 1;\n" + 
-			    "TRUE : col;\n" +
+			    "\tnext(direction) = l & left : col - 1;\n" + 
+			    "\tnext(direction) = r & right : col + 1;\n" + 
+			    "\tTRUE : col;\n" +
  		        "esac;\n" + 
 
 		"next (row) :=\n" + 
 	       	    "case" +
-			"next(direction) = d & down : row - 1;\n" +
-			"next(direction) = u & up : row + 1;\n" +
-			"TRUE : row; \n" + 
+			"\tnext(direction) = d & down : row - 1;\n" +
+			"\tnext(direction) = u & up : row + 1;\n" +
+			"\tTRUE : row; \n" + 
 		"esac;");
+
+
 
     	
 
