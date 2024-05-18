@@ -1,7 +1,7 @@
 import java.io.*;
 import java.util.*;
 
-public class Board {
+public class Board{
     char[][] cell;
     int rows = 0;
     int cols = 0;
@@ -39,7 +39,7 @@ public class Board {
 
 		int row = 0; 
 		int col = 0;
-		for(int r = 0 ; r < b.rows; r++) {
+		for(int r = b.rows -1 ; r >= 0; r--) {
 			String line = file.nextLine();
 			for(int c = 0; c < b.cols; c++){
 				b.cell[r][c] = line.charAt(c);

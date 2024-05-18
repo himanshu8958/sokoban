@@ -39,6 +39,14 @@ public class Player {
     	out.append("left := (col - 1 > 0 &\n"+
 		   "\t(board[row][col - 1] = \"_\" | board[row][col - 1]  = \".\" | \n"+
 		   "\t(boxRight & col - 2 < cols & (board[row][col - 2] = \"_\" | board[row][col - 2] = \".\"))))\n");
+        
+        out.append("ASSIGN\n");
+        for (int r = b.rows -1 ; r >= 0 ; r--){
+            for(int c = 0; c < b.cols; c++){
+                out.append("init(board[" + r  + "][" + c+"]) :=\"" + b.cell[r][c] + "\";");
+            }
+            out.append("\n");
+        }
     	
 
         return out.toString();
