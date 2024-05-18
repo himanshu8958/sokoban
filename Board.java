@@ -11,6 +11,16 @@ public class Board{
 		
 		b.printBoard();
 	}
+
+	public Location keeperLocation(){
+		for ( int r = 0; r < rows; r++){
+			for ( int c = 0 ; c<cols; c++){
+				if(cell[r][c] == '@')
+				return(new Location(r, c));
+			}
+		}
+		return null;
+	}
 	
 	public boolean exists(int x, int y) {
 		if( 0 <= x & x <= rows &

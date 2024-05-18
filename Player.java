@@ -47,6 +47,47 @@ public class Player {
             }
             out.append("\n");
         }
+        Location keeper = this.b.keeperLocation();
+        out.append("\ninit(row) : = " + keeper.x);
+        out.append("\ninit(col) : = " + keeper.y);
+
+        out.append("next(direction) :=\n" +
+			"case\n" +
+				
+                "\tleft & right & up & down		: {l, r, u, d};\n\n" +
+
+				"\tleft & right & up & !down   		: {l, r, u};\n" +
+				"\tleft & right & !up & down 		: {l, r, d};\n" + 
+				"\tleft & !right & up & down 		: {l, u, d};\n" + 
+				"\t!left & right & up & down 		: {u, r, d};\n\n" +
+
+				"\t!left & !right & up & down		: {u, d};\n" + 
+				"\t!left & right & !up & down		: {r, d};\n" +
+				"\t!left & right & up & !down		: {r, u};\n" + 
+				"\tleft & !right & !up & down		: {l, d};\n" + 
+				"\tleft & !right & up & !down		: {l, u};\n" + 
+				"\tleft & right & !up & !down		: {l, r};\n\n" + 
+
+				"\tleft & !right & !up & !down		: {l};\n" + 
+				"\t!left & right & !up & !down		: {r};\n" +
+				"\t!left & !right & up & !down		: {u};\n" +
+				"\t!left & !right & !up & down		: {d};\n" +
+			"esac;\n");
+
+            out.append("next (col) :=\n" +
+	       	    "case\n" + 
+			    "next(direction) = l & left : col - 1;\n" + 
+			    "next(direction) = r & right : col + 1;\n" + 
+			    "TRUE : col;\n" +
+ 		        "esac;\n" + 
+
+		"next (row) :=\n" + 
+	       	    "case" +
+			"next(direction) = d & down : row - 1;\n" +
+			"next(direction) = u & up : row + 1;\n" +
+			"TRUE : row; \n" + 
+		"esac;");
+
     	
 
         return out.toString();
