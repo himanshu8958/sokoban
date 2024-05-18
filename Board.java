@@ -5,6 +5,12 @@ public class Board {
     char[][] cell;
     int rows = 0;
     int cols = 0;
+
+	public static void main (String[] args) throws FileNotFoundException{
+		Board b = Board.readBoard("board3");
+		
+		b.printBoard();
+	}
 	
 	public boolean exists(int x, int y) {
 		if( 0 <= x & x <= rows &
@@ -33,13 +39,11 @@ public class Board {
 
 		int row = 0; 
 		int col = 0;
-		while(file.hasNextLine()) {
+		for(int r = 0 ; r < b.rows; r++) {
 			String line = file.nextLine();
-			for(int ctr = 0; ctr < line.length(); ctr++) {
-				b.cell[row][col] = line.charAt(col);
-				col++;
+			for(int c = 0; c < b.cols; c++){
+				b.cell[r][c] = line.charAt(c);
 			}
-			row++;
 		}
 		return b;
     }
