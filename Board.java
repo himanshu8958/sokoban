@@ -5,6 +5,13 @@ public class Board{
     char[][] cell;
     int rows = 0;
     int cols = 0;
+	public static final String keeper = "\"@\"";
+	public static final String keeperOnGoal = "\"+\"";
+	public static final String box = "\"$\"";
+	public static final String boxOnGoal = "\"*\"";
+	public static final String wall = "\"#\"";
+	public static final String goal = "\".\"";
+	public static final String floor = "\"_\"";
 
 	public static void main (String[] args) throws FileNotFoundException{
 		Board b = Board.readBoard("board3");
@@ -21,13 +28,21 @@ public class Board{
 		}
 		return null;
 	}
+	public static String getBoard(Location loc) {
+		return "Board[" + loc.x + "][" + loc.y + "]";
+	}
 	
-	public boolean exists(int x, int y) {
-		if( 0 <= x & x <= rows &
-		 0 <= y & y <= cols)
+	public static String getLocation(Location loc) {
+		return "row = " + loc.x + " & col = [" + loc.y +"] ";
+	}
+	
+	public boolean exists(Location loc) {
+		if( 0 <= loc.x & loc.x <= rows &
+		 0 <= loc.y & loc.y <= cols)
 			return true;
 		return false;
 	}
+
 	public void printBoard() {
 		for ( int r = 0; r < rows; r++){
 			for( int c = 0; c < cols; c++) {

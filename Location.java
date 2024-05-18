@@ -5,4 +5,8 @@ public class Location{
         this.x = x;
         this.y = y;
     }
+
+    public static Location transpose(Location a, Location b  ) {
+        return new Location(a.x + b.x, a.y + b.y);
+    }
 }
