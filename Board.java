@@ -13,6 +13,22 @@ public class Board{
 	public static final String goal = "\".\"";
 	public static final String floor = "\"_\"";
 
+	public static final String down = "d";
+	public static final String right = "r";
+	public static final String left = "l";
+	public static final String up = "u";
+
+	public static final String downFeasible = "down";
+	public static final String rightFeasible = "right";
+	public static final String leftFeasible = "left";
+	public static final String upFeasible = "up";
+
+	public static final String boxDown = "boxDown";
+	public static final String boxLeft = "boxLeft";
+	public static final String boxRight = "boxRight";
+	public static final String boxUp = "boxUp";
+	
+
 	public static void main (String[] args) throws FileNotFoundException{
 		Board b = Board.readBoard("board3");
 		
