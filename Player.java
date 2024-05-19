@@ -11,6 +11,21 @@ public class Player {
         Player p = new Player(board);
         System.out.println(p.smvWriter());
     }
+
+    public String incomingKeeper(String dir, String dirFeasible, Location keeperLoc, Location curLocation){
+        StringBuilder out = new StringBuilder();
+        if(!b.exists(keeperLoc) | !b.exists(curLocation)) /* taking care of the corner cases */
+            return "";
+        out.append(tab+dirFeasible + and  + Board.getLocation(keeperLoc) + and + Board.nextDirection(dir) + Board.locationHas(curLocation, Board.box) + " : " + Board.keeper +newLine);
+        out.append(tab+dirFeasible + and  + Board.getLocation(keeperLoc) + and + Board.nextDirection(dir) + Board.locationHas(curLocation, Board.boxOnGoal) + " : " + Board.goal +newLine);
+        out.append(tab+dirFeasible + and  + Board.getLocation(keeperLoc) + and + Board.nextDirection(dir) + Board.locationHas(curLocation, Board.goal) + " : " + Board.keeperOnGoal +newLine);
+        out.append(tab+dirFeasible + and  + Board.getLocation(keeperLoc) + and + Board.nextDirection(dir) + Board.locationHas(curLocation, Board.floor) + " : " + Board.keeper +newLine);        
+        return out.toString();
+    }
+
+    String tab = "\t";
+    String newLine = ";\n";
+    String and = " & ";
     public String smvWriter(){
         StringBuilder out = new StringBuilder();
         out.append("MODULE main\n\n");
