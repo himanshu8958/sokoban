@@ -49,9 +49,17 @@ public class Board{
 	}
 	
 	public static String getLocation(Location loc) {
-		return "row = " + loc.x + " & col = [" + loc.y +"] ";
+		return "row = " + loc.x + " & col = " + loc.y;
 	}
-	
+
+	public static String nextDirection(String a) {
+        return "next(direction) = " + a;
+    }
+
+    public static String locationHas(Location loc, String s) {
+        return Board.getBoard(loc) + " = " + s;
+    }
+
 	public boolean exists(Location loc) {
 		if( 0 <= loc.x & loc.x <= rows &
 		 0 <= loc.y & loc.y <= cols)
