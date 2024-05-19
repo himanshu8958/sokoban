@@ -101,8 +101,35 @@ public class Player {
 			"\tnext(direction) = d & down : row - 1;\n" +
 			"\tnext(direction) = u & up : row + 1;\n" +
 			"\tTRUE : row; \n" + 
-		"esac;");
+		"esac;\n");
 
+/*     for (int r = 0; r < b.rows; r++) {
+        for ( int c = 0 ; c < b.rows; c ++) { */
+    for (int r = 2; r < 3; r++) {
+        for ( int c = 2 ; c < 3; c ++) {
+                
+            Location curLocation = new Location(r, c);
+
+            out.append("\nnext (" + Board.getBoard(curLocation) +") :=\n");
+            out.append("case\n");
+            out.append("\t" + Board.locationHas(curLocation,Board.wall) + " : " + Board.wall + ";\n");
+            
+            /* Keeper leaving this cell */
+            out.append(tab +"-- Keeper leaving this cell\n");
+            out.append(tab + Board.getLocation(curLocation) + and +  Board.locationHas(curLocation, Board.keeper) + " : " + Board.floor + ";\n");
+            out.append(tab + Board.getLocation(curLocation) + and +  Board.locationHas(curLocation, Board.keeperOnGoal)+ " : " + Board.goal + ";\n");
+            
+            /* Welcome keeper */
+            out.append(tab +"-- Welcome Keeper\n");
+            /* keeper moves down, Thus he must be above */
+            out.append(incomingKeeper(Board.down, Board.downFeasible, Location.transpose(curLocation, Location.above), curLocation));
+            out.append(incomingKeeper(Board.up, Board.upFeasible, Location.transpose(curLocation, Location.below), curLocation));
+            out.append(incomingKeeper(Board.left, Board.leftFeasible, Location.transpose(curLocation, Location.right), curLocation));
+            out.append(incomingKeeper(Board.right, Board.rightFeasible, Location.transpose(curLocation, Location.left), curLocation));
+                        
+        
+        }
+    }
 
 
     	
