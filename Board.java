@@ -56,7 +56,7 @@ public class Board{
         return "next(direction) = " + a;
     }
 
-    public static String locationHas(Location loc, String s) {
+    public static String boardHas(Location loc, String s) {
         return Board.getBoard(loc) + " = " + s;
     }
 
