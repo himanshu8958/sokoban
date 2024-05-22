@@ -2,9 +2,11 @@ import java.io.*;
 import java.util.*;
 public class Player {
     Board b = null;
+    
     public Player(Board b){
         this.b = b;
     }
+    
     public static void main(String[] args)throws FileNotFoundException{
         
         Board board = Board.readBoard("board1");
@@ -12,14 +14,33 @@ public class Player {
         System.out.println(p.smvWriter());
     }
 
+    public StringBuilder and(String... args) {
+        StringBuilder str = new  StringBuilder();
+        for (int ctr = 0; ctr < args.length -1; ctr ++){
+            str.append(args[ctr] + " & ");
+        }
+        str.append(args[args.length - 1] + ";\n");
+        return str;
+    }
+
+    public StringBuilder incomingBox(String dirFeasible, String nextDirection, Location boxLoc, Location keeperLoc, Location curLocation){
+        StringBuilder str = new StringBuilder();
+        str.append(and(tab + dirFeasible, Board.nextDirection(nextDirection), Board.boardHas(boxLoc,Board.box), 
+        Board.getLocation(keeperLoc), Board.boardHas(curLocation, Board.floor) + " : " + Board.box));
+        str.append(and(tab + dirFeasible, Board.nextDirection(nextDirection), Board.boardHas(boxLoc,Board.box), 
+        Board.getLocation(keeperLoc), Board.boardHas(curLocation, Board.goal) + " : " + Board.boxOnGoal));
+        
+        return str;
+    }
+
     public String incomingKeeper(String dir, String dirFeasible, Location keeperLoc, Location curLocation){
         StringBuilder out = new StringBuilder();
         if(!b.exists(keeperLoc) | !b.exists(curLocation)) /* taking care of the corner cases */
             return "";
-        out.append(tab+dirFeasible + and  + Board.getLocation(keeperLoc) + and + Board.nextDirection(dir) + Board.locationHas(curLocation, Board.box) + " : " + Board.keeper +newLine);
-        out.append(tab+dirFeasible + and  + Board.getLocation(keeperLoc) + and + Board.nextDirection(dir) + Board.locationHas(curLocation, Board.boxOnGoal) + " : " + Board.goal +newLine);
-        out.append(tab+dirFeasible + and  + Board.getLocation(keeperLoc) + and + Board.nextDirection(dir) + Board.locationHas(curLocation, Board.goal) + " : " + Board.keeperOnGoal +newLine);
-        out.append(tab+dirFeasible + and  + Board.getLocation(keeperLoc) + and + Board.nextDirection(dir) + Board.locationHas(curLocation, Board.floor) + " : " + Board.keeper +newLine);        
+        out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.box) + " : " + Board.keeper));
+        out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.boxOnGoal) + " : " + Board.goal));
+        out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.goal) + " : " + Board.keeperOnGoal));
+        out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.floor) + " : " + Board.keeper));        
         return out.toString();
     }
 
