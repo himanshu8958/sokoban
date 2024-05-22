@@ -133,12 +133,15 @@ public class Player {
 
             out.append("\nnext (" + Board.getBoard(curLocation) +") :=\n");
             out.append("case\n");
-            out.append("\t" + Board.locationHas(curLocation,Board.wall) + " : " + Board.wall + ";\n");
+            out.append("\t" + Board.boardHas(curLocation,Board.wall) + " : " + Board.wall + ";\n");
             
             /* Keeper leaving this cell */
             out.append(tab +"-- Keeper leaving this cell\n");
-            out.append(tab + Board.getLocation(curLocation) + and +  Board.locationHas(curLocation, Board.keeper) + " : " + Board.floor + ";\n");
-            out.append(tab + Board.getLocation(curLocation) + and +  Board.locationHas(curLocation, Board.keeperOnGoal)+ " : " + Board.goal + ";\n");
+            out.append(and(tab + Board.getLocation(curLocation), Board.boardHas(curLocation, Board.keeper) + " : " + Board.floor ));
+            out.append(and(tab + Board.getLocation(curLocation), Board.boardHas(curLocation, Board.keeperOnGoal)+ " : " + Board.goal));
+ 
+	        
+
             
             /* Welcome keeper */
             out.append(tab +"-- Welcome Keeper\n");
@@ -147,8 +150,13 @@ public class Player {
             out.append(incomingKeeper(Board.up, Board.upFeasible, Location.transpose(curLocation, Location.below), curLocation));
             out.append(incomingKeeper(Board.left, Board.leftFeasible, Location.transpose(curLocation, Location.right), curLocation));
             out.append(incomingKeeper(Board.right, Board.rightFeasible, Location.transpose(curLocation, Location.left), curLocation));
-                        
-        
+
+            /* Incoming box */
+            out.append(tab + "-- Incoming box\n");
+            out.append(incomingBox(Board.downFeasible, Board.down, Location.transpose(curLocation, Location.above), Location.transpose(curLocation, Location.above2), curLocation));
+            out.append(incomingBox(Board.upFeasible, Board.up, Location.transpose(curLocation, Location.below), Location.transpose(curLocation, Location.below2), curLocation));
+            out.append(incomingBox(Board.leftFeasible, Board.left,Location.transpose(curLocation, Location.right), Location.transpose(curLocation, Location.right2), curLocation));
+            out.append(incomingBox(Board.rightFeasible, Board.right,Location.transpose(curLocation, Location.left), Location.transpose(curLocation, Location.left2), curLocation));
         }
     }
 
