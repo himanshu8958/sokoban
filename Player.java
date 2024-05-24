@@ -6,12 +6,16 @@ public class Player {
     public Player(Board b){
         this.b = b;
     }
-    
-    public static void main(String[] args)throws FileNotFoundException{
-        
-        Board board = Board.readBoard("board1");
+
+    public static void main(String[] args)throws IOException{
+        String curBoard = "board1";
+        Board board = Board.readBoard(curBoard);
+        File smvFile = new File(curBoard + ".smv");
         Player p = new Player(board);
-        System.out.println(p.smvWriter());
+        FileWriter out = new FileWriter(smvFile);
+        /* System.out.println(p.smvWriter()); */
+        out.write(p.smvWriter());
+        out.close();
     }
 
     public StringBuilder and(String... args) {
@@ -25,23 +29,44 @@ public class Player {
 
     public StringBuilder incomingBox(String dirFeasible, String nextDirection, Location boxLoc, Location keeperLoc, Location curLocation){
         StringBuilder str = new StringBuilder();
+        if(!b.exists(curLocation) | !b.exists(keeperLoc) | !b.exists(boxLoc)) 
+            return str;
         str.append(and(tab + dirFeasible, Board.nextDirection(nextDirection), Board.boardHas(boxLoc,Board.box), 
-        Board.getLocation(keeperLoc), Board.boardHas(curLocation, Board.floor) + " : " + Board.box));
+            Board.getLocation(keeperLoc), Board.boardHas(curLocation, Board.floor) + " : " + Board.box));
         str.append(and(tab + dirFeasible, Board.nextDirection(nextDirection), Board.boardHas(boxLoc,Board.box), 
-        Board.getLocation(keeperLoc), Board.boardHas(curLocation, Board.goal) + " : " + Board.boxOnGoal));
+            Board.getLocation(keeperLoc), Board.boardHas(curLocation, Board.goal) + " : " + Board.boxOnGoal));
+        str.append(and(tab + dirFeasible, Board.nextDirection(nextDirection), Board.boardHas(boxLoc,Board.boxOnGoal), 
+            Board.getLocation(keeperLoc), Board.boardHas(curLocation, Board.floor) + " : " + Board.box));
+        str.append(and(tab + dirFeasible, Board.nextDirection(nextDirection), Board.boardHas(boxLoc,Board.boxOnGoal), 
+            Board.getLocation(keeperLoc), Board.boardHas(curLocation, Board.goal) + " : " + Board.boxOnGoal));
+
+        return str;
+    }
+
+    /* curLocation is box location */
+    public StringBuilder outgoingBox(String dirFeasible, String nextDirection, Location curLocation, Location keeperLoc){
+        StringBuilder str = new StringBuilder();
+        if(!b.exists(curLocation) | !b.exists(keeperLoc)) 
+            return str;
+        str.append(and(tab + dirFeasible, Board.nextDirection(nextDirection),
+            Board.getLocation(keeperLoc),
+            Board.boardHas(curLocation, Board.box) + " : " + Board.floor));
+        str.append(and(tab + dirFeasible, Board.nextDirection(nextDirection),
+            Board.getLocation(keeperLoc),
+            Board.boardHas(curLocation, Board.boxOnGoal) + " : " + Board.goal));
         
         return str;
     }
 
-    public String incomingKeeper(String dir, String dirFeasible, Location keeperLoc, Location curLocation){
+    public StringBuilder incomingKeeper(String dir, String dirFeasible, Location keeperLoc, Location curLocation){
         StringBuilder out = new StringBuilder();
         if(!b.exists(keeperLoc) | !b.exists(curLocation)) /* taking care of the corner cases */
-            return "";
+            return out;
         out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.box) + " : " + Board.keeper));
-        out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.boxOnGoal) + " : " + Board.goal));
+        out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.boxOnGoal) + " : " + Board.keeperOnGoal));
         out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.goal) + " : " + Board.keeperOnGoal));
         out.append(and(tab+dirFeasible, Board.getLocation(keeperLoc), Board.nextDirection(dir), Board.boardHas(curLocation, Board.floor) + " : " + Board.keeper));        
-        return out.toString();
+        return out;
     }
 
     String tab = "\t";
@@ -51,12 +76,12 @@ public class Player {
         StringBuilder out = new StringBuilder();
         out.append("MODULE main\n\n");
         out.append("DEFINE\n");
-        out.append("rows = " + b.rows + ";\n");
-        out.append("cols = " + b.cols + ";\n\n");
+        out.append("rows := " + b.rows + ";\n");
+        out.append("cols := " + b.cols + ";\n\n");
         out.append("VAR\n");
-        out.append("row : 0..rows-1;\n");
-        out.append("col : 0..cols-1;\n");
-        out.append("direction : {l, r, u, d, stop};\n");
+        out.append("row : 0..rows - 1;\n");
+        out.append("col : 0..cols - 1;\n");
+        out.append("direction : {l, r, u, d};\n");
         out.append("board:array 0 .. 8 of array 0 .. 7 of {\"@\", \"+\", \"$\", \"*\", \"#\", \".\", \"_\"};\n");
         out.append("DEFINE\n");
         out.append("boxRight := board[row][col + 1] = \"$\" | board[row][col + 1] = \"*\";\n");
@@ -65,16 +90,16 @@ public class Player {
         out.append("boxUp    := board[row + 1][col] = \"$\" | board[row + 1][col] = \"*\";\n\n");
         out.append("up := (row + 1 < rows &\n"+
 		   "\t(board[row + 1][ col] = \"_\" | board[row + 1 ][col]  = \".\" | \n"+
-		   "\t(boxUp & row + 2 < rows & (board[row + 2][col] = \"_\" | board[row + 2][col] = \".\"))))\n");
+		   "\t(boxUp & row + 2 < rows & (board[row + 2][col] = \"_\" | board[row + 2][col] = \".\"))));\n");
         out.append("down := (row - 1 > 0 &\n"+
 		   "\t(board[row - 1][ col] = \"_\" | board[row - 1 ][col]  = \".\" |\n" +
 		   "\t(boxDown & row - 2 >= 0 & (board[row - 2][col] = \"_\" | board[row - 2][col] = \".\"))));\n");
         out.append("right := (col + 1 < cols &\n"+
 		   "\t(board[row][col + 1] = \"_\" | board[row][col + 1]  = \".\" | \n"+
-		   "\t(boxRight & col + 2 < cols & (board[row][col + 2] = \"_\" | board[row][col + 2] = \".\"))))\n");
+		   "\t(boxRight & col + 2 < cols & (board[row][col + 2] = \"_\" | board[row][col + 2] = \".\"))));\n");
     	out.append("left := (col - 1 > 0 &\n"+
 		   "\t(board[row][col - 1] = \"_\" | board[row][col - 1]  = \".\" | \n"+
-		   "\t(boxRight & col - 2 < cols & (board[row][col - 2] = \"_\" | board[row][col - 2] = \".\"))))\n");
+		   "\t(boxRight & col - 2 < cols & (board[row][col - 2] = \"_\" | board[row][col - 2] = \".\"))));\n");
         
         out.append("ASSIGN\n");
         for (int r = b.rows -1 ; r >= 0 ; r--){
@@ -84,15 +109,15 @@ public class Player {
             out.append("\n");
         }
         Location keeper = this.b.keeperLocation();
-        out.append("\ninit(row) : = " + keeper.x);
-        out.append("\ninit(col) : = " + keeper.y);
+        out.append("\ninit(row) := " + keeper.x + ";");
+        out.append("\ninit(col) := " + keeper.y + ";");
 
-        out.append("next(direction) :=\n" +
+        out.append("\nnext(direction) :=\n" +
 			"case\n" +
 				
                 "\tleft & right & up & down		: {l, r, u, d};\n\n" +
 
-				"\tleft & right & up & !down   		: {l, r, u};\n" +
+				"\tleft & right & up & !down       : {l, r, u};\n" +
 				"\tleft & right & !up & down 		: {l, r, d};\n" + 
 				"\tleft & !right & up & down 		: {l, u, d};\n" + 
 				"\t!left & right & up & down 		: {u, r, d};\n\n" +
@@ -108,6 +133,9 @@ public class Player {
 				"\t!left & right & !up & !down		: {r};\n" +
 				"\t!left & !right & up & !down		: {u};\n" +
 				"\t!left & !right & !up & down		: {d};\n" +
+                /* should be unreachable case */
+                "\t--should be unreachable\n"+
+                "\tTRUE : {l, r, u, d};\n" +
 			"esac;\n");
 
             out.append("next (col) :=\n" +
@@ -124,11 +152,11 @@ public class Player {
 			"\tTRUE : row; \n" + 
 		"esac;\n");
 
-/*     for (int r = 0; r < b.rows; r++) {
-        for ( int c = 0 ; c < b.rows; c ++) { */
-    for (int r = 2; r < 3; r++) {
+    for (int r = 0; r < b.rows; r++) {
+        for ( int c = 0 ; c < b.rows; c ++) { 
+    /* for (int r = 2; r < 3; r++) {
         for ( int c = 2 ; c < 3; c ++) {
-                
+     */            
             Location curLocation = new Location(r, c);
 
             out.append("\nnext (" + Board.getBoard(curLocation) +") :=\n");
@@ -139,9 +167,6 @@ public class Player {
             out.append(tab +"-- Keeper leaving this cell\n");
             out.append(and(tab + Board.getLocation(curLocation), Board.boardHas(curLocation, Board.keeper) + " : " + Board.floor ));
             out.append(and(tab + Board.getLocation(curLocation), Board.boardHas(curLocation, Board.keeperOnGoal)+ " : " + Board.goal));
- 
-	        
-
             
             /* Welcome keeper */
             out.append(tab +"-- Welcome Keeper\n");
@@ -153,10 +178,27 @@ public class Player {
 
             /* Incoming box */
             out.append(tab + "-- Incoming box\n");
-            out.append(incomingBox(Board.downFeasible, Board.down, Location.transpose(curLocation, Location.above), Location.transpose(curLocation, Location.above2), curLocation));
-            out.append(incomingBox(Board.upFeasible, Board.up, Location.transpose(curLocation, Location.below), Location.transpose(curLocation, Location.below2), curLocation));
-            out.append(incomingBox(Board.leftFeasible, Board.left,Location.transpose(curLocation, Location.right), Location.transpose(curLocation, Location.right2), curLocation));
-            out.append(incomingBox(Board.rightFeasible, Board.right,Location.transpose(curLocation, Location.left), Location.transpose(curLocation, Location.left2), curLocation));
+            out.append(incomingBox(Board.downFeasible, Board.down, Location.transpose(curLocation, Location.above),
+             Location.transpose(curLocation, Location.above2), curLocation));
+            out.append(incomingBox(Board.upFeasible, Board.up, Location.transpose(curLocation, Location.below),
+             Location.transpose(curLocation, Location.below2), curLocation));
+            out.append(incomingBox(Board.leftFeasible, Board.left,Location.transpose(curLocation, Location.right),
+             Location.transpose(curLocation, Location.right2), curLocation));
+            out.append(incomingBox(Board.rightFeasible, Board.right,Location.transpose(curLocation, Location.left),
+             Location.transpose(curLocation, Location.left2), curLocation));
+
+            /* Outgoing box */
+            out.append(tab + "-- Outgoing box\n");
+            out.append(outgoingBox(Board.downFeasible, Board.down, curLocation, Location.transpose(curLocation, Location.above)));
+            out.append(outgoingBox(Board.upFeasible, Board.up, curLocation, Location.transpose(curLocation, Location.below)));
+            out.append(outgoingBox(Board.leftFeasible, Board.left, curLocation, Location.transpose(curLocation, Location.right)));
+            out.append(outgoingBox(Board.rightFeasible, Board.right, curLocation, Location.transpose(curLocation, Location.left)));
+
+            /* Default case:  nothing happened */
+            out.append(tab + "TRUE : " + Board.getBoard(curLocation) + ";\n");
+
+            /* time to close the case */
+            out.append(and("esac"));
         }
     }
 
