@@ -66,7 +66,9 @@ public class Board{
 			return true;
 		return false;
 	}
-
+	public static String cellToString(char a) {
+		return "\"" + a + "\"";
+	}
 	public void printBoard() {
 		for ( int r = 0; r < rows; r++){
 			for( int c = 0; c < cols; c++) {
