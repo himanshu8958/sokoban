@@ -8,7 +8,7 @@ public class Player {
     }
 
     public static void main(String[] args)throws IOException{
-        String curBoard = "board1";
+        String curBoard = args[0];
         Board board = Board.readBoard(curBoard);
         File smvFile = new File(curBoard + ".smv");
         Player p = new Player(board);
@@ -152,13 +152,11 @@ public class Player {
 			"\tTRUE : row; \n" + 
 		"esac;\n");
 
+    System.out.println("rows : " + b.rows + " cols : " + b.cols);
     for (int r = 0; r < b.rows; r++) {
-        for ( int c = 0 ; c < b.rows; c ++) { 
-    /* for (int r = 2; r < 3; r++) {
-        for ( int c = 2 ; c < 3; c ++) {
-     */            
+        for ( int c = 0 ; c < b.cols; c ++) { 
             Location curLocation = new Location(r, c);
-
+            System.out.println("processed  loc: " + curLocation + "");
             out.append("\nnext (" + Board.getBoard(curLocation) +") :=\n");
             out.append("case\n");
             out.append("\t" + Board.boardHas(curLocation,Board.wall) + " : " + Board.wall + ";\n");
@@ -201,10 +199,51 @@ public class Player {
             out.append(and("esac"));
         }
     }
-
-
-    	
-
+        out.append(negWinningCondition());
+        /* System.out.println(moreGoalsLessBoxes()); */
+        /* System.out.println(lessGoalsMoreBoxex()); */
+        out.append(moreGoalsLessBoxes());
         return out.toString();
+    }
+    
+    public StringBuilder negWinningCondition(){
+        StringBuilder str = new StringBuilder();
+        return str;
+    }
+    
+    /* reached all goals and same number of boxes */
+    public StringBuilder allGoalsSameBoxex(){
+        StringBuilder str = new StringBuilder();
+        return str;
+    }
+
+    public StringBuilder moreGoalsLessBoxes(){
+        StringBuilder str = new StringBuilder();
+        str.append("LTLSPEC NAME moreGoalsLessBoxes := G(");
+        for(int r = 0; r < b.rows; r ++) {
+            for (int c = 0; c < b.cols; c ++){
+                Location curloc = new Location(r,c);
+                if(curloc.x == (b.rows - 1) & curloc.y == (b.cols - 1 ) )
+                    str.append(Board.getBoard(curloc) + " != " + Board.box + ");");
+                else
+                str.append(Board.getBoard(curloc) + " != " + Board.box  + " & "); 
+            }
+        }
+        return str;
+    }
+
+    public StringBuilder lessGoalsMoreBoxex(){
+        StringBuilder str = new StringBuilder();
+        str.append("LTLSPEC NAME moreGoalsLessBoxes := G(");
+        for(int r = 0; r < b.rows; r ++) {
+            for (int c = 0; c < b.cols; c ++){
+                Location curloc = new Location(r,c);
+                if(curloc.x == (b.rows - 1) & curloc.y == (b.cols - 1 ) )
+                    str.append(Board.getBoard(curloc) + " != " + Board.goal + ");");
+                else
+                str.append(Board.getBoard(curloc) + " != " + Board.goal  + " & "); 
+            }
+        }
+        return str;
     }
 }

@@ -19,4 +19,8 @@ public class Location{
     public static Location transpose(Location a, Location b  ) {
         return new Location(a.x + b.x, a.y + b.y);
     }
+
+    public String toString() {
+        return "(" + x + ", "+ y + ") ";
+    }
 }
