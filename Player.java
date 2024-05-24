@@ -135,7 +135,7 @@ public class Player {
 				"\t!left & !right & !up & down		: {d};\n" +
                 /* should be unreachable case */
                 "\t--should be unreachable\n"+
-                "\tTRUE : {l, r, u, d};\n" +
+                "\tTRUE                    : {l, r, u, d};\n" +
 			"esac;\n");
 
             out.append("next (col) :=\n" +
