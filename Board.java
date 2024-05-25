@@ -98,5 +98,41 @@ public class Board{
 		}
 		return b;
     }
+	public List<Location> getGoals(){
+		List<Location> goals = new ArrayList<Location>();
+		for(int r = 0; r < this.rows; r++){
+			for (int c = 0 ; c < this.cols; c++){
+				if(cellToString(this.cell[r][c]).equals(Board.goal) || 
+					cellToString(cell[r][c]).equals(Board.boxOnGoal) || 
+					cellToString(cell[r][c]).equals(Board.keeperOnGoal)) {
+					goals.add(new Location(r,c));
+				}
+				
+			}
+		}
+		return goals;
+	}
+
+	public StringBuilder winningCondition() {
+		StringBuilder str = new StringBuilder();
+		List<Location> goals = new ArrayList<Location>();
+		for(int r = 0; r < this.rows; r++){
+			for (int c = 0 ; c < this.cols; c++){
+				if(cellToString(this.cell[r][c]).equals(Board.goal) || 
+					cellToString(cell[r][c]).equals(Board.boxOnGoal) || 
+					cellToString(cell[r][c]).equals(Board.keeperOnGoal)) {
+					goals.add(new Location(r,c));
+				}
+				
+			}
+		}
+		System.out.println(goals.size());
+		for(int ctr = 0; ctr < (goals.size() -1); ctr++){
+			str.append(Board.boardHas(goals.get(ctr), Board.boxOnGoal));
+			str.append(" & ");
+		}
+		str.append(Board.boardHas(goals.get(goals.size() - 1), Board.boxOnGoal) + ";\n");
+		return str;
+	}
 
 }
