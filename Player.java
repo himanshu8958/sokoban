@@ -80,11 +80,13 @@ public class Player {
         out.append("cols := " + b.cols + ";\n");
         out.append("goalsCovered := "  + b.winningCondition()+"\n");
         out.append("VAR\n");
-        out.append("row : 0.."+ (b.rows - 1) +";\n");
-        out.append("col : 0.."+ (b.cols - 1) +";\n");
+        /* out.append("row : 0.."+ (b.rows - 1) +";\n");
+        out.append("col : 0.."+ (b.cols - 1) +";\n"); */
+        out.append("row : 0.. (rows - 1);\n");
+        out.append("col : 0.. (cols - 1);\n");
         out.append("won : boolean;\n");
         out.append("direction : {l, r, u, d};\n");
-        out.append("board:array 0 .. 8 of array 0 .. 7 of {\"#\", \"+\", \"$\", \"*\", \"@\", \".\", \"_\"};\n");
+        out.append("board:array 0 .. (rows - 1) of array 0 .. (cols - 1) of {\"#\", \"+\", \"$\", \"*\", \"@\", \".\", \"_\"};\n");
         out.append("DEFINE\n");
         out.append("boxRight := board[row][col + 1] = \"$\" | board[row][col + 1] = \"*\";\n");
         out.append("boxLeft  := board[row][col - 1] = \"$\" | board[row][col - 1] = \"*\";\n");
@@ -212,8 +214,8 @@ public class Player {
         /* System.out.println(lessGoalsMoreBoxex()); */
         /* out.append(moreGoalsLessBoxes()); */
         /* out.append(GFnoBoxesWithoutGoals()); */
-        /* out.append("LTLSPEC NAME iNeverWin := G(!won);\n"); */
-        out.append(goalsAreCovered());
+        out.append("LTLSPEC NAME iNeverWin := G(!won);\n");
+        /* out.append(goalsAreCovered()); */
         return out.toString();
     }
     
@@ -259,8 +261,8 @@ public class Player {
                 Board.boardHas(goals.get(goals.size() - 1), Board.goal) +
                  " | "  +
                 Board.boardHas(goals.get(goals.size() - 1), Board.keeperOnGoal) +
-                 " ));");
-        
+                 " )");
+        /* str.append(Board.boardHas(goals.get(goals.size() - 1), Board.goal) + ");\n "); */
         return str;
     }
 
