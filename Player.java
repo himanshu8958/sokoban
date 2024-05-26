@@ -88,10 +88,10 @@ public class Player {
         out.append("direction : {l, r, u, d};\n");
         out.append("board:array 0 .. (rows - 1) of array 0 .. (cols - 1) of {\"#\", \"+\", \"$\", \"*\", \"@\", \".\", \"_\"};\n");
         out.append("DEFINE\n");
-        out.append("boxRight := board[row][col + 1] = \"$\" | board[row][col + 1] = \"*\";\n");
-        out.append("boxLeft  := board[row][col - 1] = \"$\" | board[row][col - 1] = \"*\";\n");
-        out.append("boxDown  := board[row - 1][col] = \"$\" | board[row - 1][col] = \"*\";\n");
-        out.append("boxUp    := board[row + 1][col] = \"$\" | board[row + 1][col] = \"*\";\n\n");
+        out.append("boxRight := ((col + 1) < cols) & (board[row][col + 1] = \"$\" | board[row][col + 1] = \"*\");\n");
+        out.append("boxLeft  := ((col - 1) > -1)   & (board[row][col - 1] = \"$\" | board[row][col - 1] = \"*\");\n");
+        out.append("boxDown  := ((row - 1) > -1)   & (board[row - 1][col] = \"$\" | board[row - 1][col] = \"*\");\n");
+        out.append("boxUp    := ((row + 1) < rows) & (board[row + 1][col] = \"$\" | board[row + 1][col] = \"*\");\n\n");
         out.append("up := (row + 1 < rows &\n"+
 		   "\t(board[row + 1][ col] = \"_\" | board[row + 1 ][col]  = \".\" | \n"+
 		   "\t(boxUp & row + 2 < rows & (board[row + 2][col] = \"_\" | board[row + 2][col] = \".\"))));\n");
