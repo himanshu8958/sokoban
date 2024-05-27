@@ -112,7 +112,7 @@ public class Player {
             }
             out.append("\n");
         }
-        Location keeper = this.b.keeperLocation();
+        Location keeper = this.b.getKeeperLocation();
         out.append("\ninit(row) := " + keeper.x + ";");
         out.append("\ninit(col) := " + keeper.y + ";");
         out.append("\ninit(won) := FALSE;");
@@ -245,27 +245,26 @@ public class Player {
         return str;
     }
 
-    public StringBuilder goalsAreCovered(){
-        List<Location> goals = b.getGoals();
+    /* public StringBuilder goalsAreCovered(){
+        Set<Location> goals = b.getGoalPositions();
         StringBuilder str = new StringBuilder();
         str.append("LTLSPEC NAME goalsCovered :=G(" );
-        for( int ctr = 0; ctr < (goals.size() - 1); ctr++ ){
+        Iterator<Location> iter = goals.iterator();
+        while(iter.hasNext()) {
+            Location curLocation  = iter.next();
             str.append("("+
-                Board.boardHas(goals.get(ctr), Board.goal) + 
+                Board.boardHas(curLocation, Board.goal) + 
                 " | "  +
-                Board.boardHas(goals.get(ctr), Board.keeperOnGoal) +
-                 " ) "  +
-                 " & ");
+                Board.boardHas(curLocation, Board.keeperOnGoal) +
+                 " ) ");
+            if(iter.hasNext()){
+                str.append(" & ");
+            } else {
+                str.append(");\n");
+            }
         }
-        str.append("(" +
-                Board.boardHas(goals.get(goals.size() - 1), Board.goal) +
-                 " | "  +
-                Board.boardHas(goals.get(goals.size() - 1), Board.keeperOnGoal) +
-                 " )");
-        /* str.append(Board.boardHas(goals.get(goals.size() - 1), Board.goal) + ");\n "); */
         return str;
     }
-
     public StringBuilder GFnoBoxesWithoutGoals(){
         StringBuilder str = new StringBuilder();
         str.append("LTLSPEC NAME GFnoBoxesWithoutGoals := GF(");

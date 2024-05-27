@@ -28,18 +28,29 @@ public class Board{
 	public static final String boxRight = "boxRight";
 	public static final String boxUp =    "boxUp   ";
 	
+	public Board(char[][] cell, int rows, int cols){
+		this.cell = cell;
+		this.rows = rows;
+		this.cols = cols;
+	}
 
+	public Board() {
+		this.cell = null;
+		this.rows = 0;
+		this.cols = 0;
+	}
+	
 	public static void main (String[] args) throws FileNotFoundException{
 		Board b = Board.readBoard("board3");
 		
 		b.printBoard();
 	}
 
-	public Location keeperLocation(){
+	public Location getKeeperLocation(){
 		for ( int r = 0; r < rows; r++){
 			for ( int c = 0 ; c<cols; c++){
-				if(cell[r][c] == '@')
-				return(new Location(r, c));
+				if(cell[r][c] == '@' | cell[r][c] == '+')
+					return(new Location(r, c));
 			}
 		}
 		return null;
@@ -69,6 +80,7 @@ public class Board{
 	public static String cellToString(char a) {
 		return "\"" + a + "\"";
 	}
+
 	public void printBoard() {
 		for ( int r = 0; r < rows; r++){
 			for( int c = 0; c < cols; c++) {
@@ -98,8 +110,9 @@ public class Board{
 		}
 		return b;
     }
-	public List<Location> getGoals(){
-		List<Location> goals = new ArrayList<Location>();
+
+	public Set<Location> getGoalPositions(){
+		Set<Location> goals = new HashSet<Location>();
 		for(int r = 0; r < this.rows; r++){
 			for (int c = 0 ; c < this.cols; c++){
 				if(cellToString(this.cell[r][c]).equals(Board.goal) || 
@@ -112,6 +125,41 @@ public class Board{
 		}
 		return goals;
 	}
+
+	public Board getPartialBoard(Set<Location> currentBoxes, Set<Location> currentGoals){
+		Board newBoard =  new Board(this.cell.clone(), this.rows, this.cols);
+		Set<Location> boxesToKill = this.getBoxPositions();
+		boxesToKill.removeAll(currentBoxes);
+		Set<Location> goalsToKill = this.getGoalPositions();
+		goalsToKill.removeAll(currentGoals);
+
+		for(Location deadBox : boxesToKill){
+			newBoard.cell[deadBox.x][deadBox.y] = '#';
+		}
+		for(Location deadGoal : goalsToKill) {
+			if(deadGoal.equals(getKeeperLocation())){
+				newBoard.cell[deadGoal.x][deadGoal.y] = '@';
+			} else {
+				newBoard.cell[deadGoal.x][deadGoal.y] = '_';
+			}
+		}
+		return newBoard;		
+	}
+
+	public Set<Location> getBoxPositions(){
+		Set<Location> goals = new HashSet<Location>();
+		for(int r = 0; r < this.rows; r++){
+			for (int c = 0 ; c < this.cols; c++){
+				if(cellToString(this.cell[r][c]).equals(Board.box) || 
+					cellToString(cell[r][c]).equals(Board.boxOnGoal)){
+					goals.add(new Location(r,c));
+				}
+				
+			}
+		}
+		return goals;
+	}
+	
 
 	public StringBuilder winningCondition() {
 		StringBuilder str = new StringBuilder();
