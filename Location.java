@@ -23,4 +23,16 @@ public class Location{
     public String toString() {
         return "(" + x + ", "+ y + ") ";
     }
+
+    public boolean equals(Object b) {
+        if(b instanceof Location){
+            Location bLoc = (Location) b;
+            return this.x == bLoc.x & this.y == bLoc.y;
+        }
+        return false;
+    }
+
+    public int hashCode() {
+        return Integer.valueOf(x).hashCode() + 13 * Integer.valueOf(y).hashCode();
+    }
 }
