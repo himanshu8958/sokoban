@@ -127,6 +127,8 @@ public class Board{
 	}
 
 	public Board getPartialBoard(Set<Location> currentBoxes, Set<Location> currentGoals){
+		if(currentBoxes.size() != currentGoals.size())
+			System.out.println("Same # of boxes and goals should be killed");
 		Board newBoard =  new Board(this.cell.clone(), this.rows, this.cols);
 		Set<Location> boxesToKill = this.getBoxPositions();
 		boxesToKill.removeAll(currentBoxes);
