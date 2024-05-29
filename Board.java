@@ -27,6 +27,17 @@ public class Board{
 	public static final String boxLeft =  "boxLeft ";
 	public static final String boxRight = "boxRight";
 	public static final String boxUp =    "boxUp   ";
+
+	public String toString(){
+		StringBuilder str = new StringBuilder();
+		for ( int r = 0; r < rows; r++){
+			for( int c = 0; c < cols; c++) {
+				str.append(cell[r][c]);
+			}
+			str.append('\n');
+		}
+		return str.toString();
+	}
 	
 	public Board(char[][] cell, int rows, int cols){
 		this.cell = cell;
@@ -38,6 +49,15 @@ public class Board{
 		this.cell = null;
 		this.rows = 0;
 		this.cols = 0;
+	}
+	
+	public Board copy(){
+		char [][] nuBoard = new char[this.rows] [this.cols];
+		for(int r = 0; r < this.rows; r++) 
+			for(int c = 0; c < this.cols; c++){
+				nuBoard[r][c] = this.cell[r][c];
+			}
+		return new Board(nuBoard, this.rows, this.cols);
 	}
 	
 	public static void main (String[] args) throws FileNotFoundException{

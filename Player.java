@@ -162,7 +162,6 @@ public class Player {
 			"\tTRUE : row; \n" + 
 		"esac;\n");
 
-    System.out.println("rows : " + b.rows + " cols : " + b.cols);
     for (int r = 0; r < b.rows; r++) {
         for ( int c = 0 ; c < b.cols; c ++) { 
             Location curLocation = new Location(r, c);
