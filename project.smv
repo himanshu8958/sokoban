@@ -76,7 +76,7 @@ ASSIGN
 				!left & !right & !up & down		: {d};
 
 				-- !left & !right & !up & !down		: {stop};
-
+				TRUE: 		:{stop};
 			esac;
 
 		next (col) :=
