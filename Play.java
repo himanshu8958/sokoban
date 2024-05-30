@@ -92,6 +92,7 @@ public class Play {
                 currentState.loopStarted = true;
             }
         }
+        br.close();
         return thisPlay;
     }
     

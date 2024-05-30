@@ -120,14 +120,14 @@ public class Board{
 		file = new Scanner(new File(path));
 		b.cell = new char[b.rows][b.cols];
 
-		int row = 0; 
-		int col = 0;
+
 		for(int r = b.rows -1 ; r >= 0; r--) {
 			String line = file.nextLine();
 			for(int c = 0; c < b.cols; c++){
 				b.cell[r][c] = line.charAt(c);
 			}
 		}
+		file.close();
 		return b;
     }
 
