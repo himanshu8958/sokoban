@@ -28,10 +28,10 @@ public class Board{
 	public static final String boxRight = "boxRight";
 	public static final String boxUp =    "boxUp   ";
 
-	public String toString(){
+	public String toString() {
 		StringBuilder str = new StringBuilder();
-		for ( int r = 0; r < rows; r++){
-			for( int c = 0; c < cols; c++) {
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
 				str.append(cell[r][c]);
 			}
 			str.append('\n');
@@ -39,6 +39,39 @@ public class Board{
 		return str.toString();
 	}
 	
+	int hashcode = -1;
+
+	public int hashCode() {
+		int ans = 0;
+		if (this.hashcode != -1)
+			return this.hashcode;
+		for (int r = 0; r < this.rows; r++) {
+			for (int c = 0; c < this.cols; c++) {
+				ans *= 11;
+				ans += getCell(new Location(r, c)).hashCode();
+			}
+		}
+		this.hashcode = ans;
+		return ans;
+	}
+
+	public boolean equals(Object b) {
+		if (!(b instanceof Board))
+			return false;
+		Board otherBoard = (Board) b;
+		if (this.rows != otherBoard.rows || this.cols != otherBoard.cols) {
+			return false;
+		}
+
+		for (int r = 0; r < this.rows; r++) {
+			for (int c = 0; c < this.cols; c++) {
+				if (this.cell[r][c] != otherBoard.cell[r][c])
+					return false;
+			}
+		}
+		return true;
+	}
+
 	public Board(char[][] cell, int rows, int cols){
 		this.cell = cell;
 		this.rows = rows;
@@ -60,10 +93,19 @@ public class Board{
 		return new Board(nuBoard, this.rows, this.cols);
 	}
 	
-	public static void main (String[] args) throws FileNotFoundException{
+	public static void main(String[] args) throws FileNotFoundException {
 		Board b = Board.readBoard("board3");
-		
+
 		b.printBoard();
+	}
+
+	public String getCell(Location l) {
+		return cellToString(this.cell[l.x][l.y]);
+	}
+
+	public void setCell(Location l, String s) {
+		this.cell[l.x][l.y] = s.charAt(1);
+		this.hashcode = -1;
 	}
 
 	public Location getKeeperLocation(){
@@ -186,23 +228,54 @@ public class Board{
 	public StringBuilder winningCondition() {
 		StringBuilder str = new StringBuilder();
 		List<Location> goals = new ArrayList<Location>();
-		for(int r = 0; r < this.rows; r++){
-			for (int c = 0 ; c < this.cols; c++){
-				if(cellToString(this.cell[r][c]).equals(Board.goal) || 
-					cellToString(cell[r][c]).equals(Board.boxOnGoal) || 
-					cellToString(cell[r][c]).equals(Board.keeperOnGoal)) {
-					goals.add(new Location(r,c));
+		for (int r = 0; r < this.rows; r++) {
+			for (int c = 0; c < this.cols; c++) {
+				if (cellToString(this.cell[r][c]).equals(Board.goal) ||
+						cellToString(cell[r][c]).equals(Board.boxOnGoal) ||
+						cellToString(cell[r][c]).equals(Board.keeperOnGoal)) {
+					goals.add(new Location(r, c));
 				}
 				
 			}
 		}
 		System.out.println(goals.size());
-		for(int ctr = 0; ctr < (goals.size() -1); ctr++){
+		for (int ctr = 0; ctr < (goals.size() - 1); ctr++) {
 			str.append(Board.boardHas(goals.get(ctr), Board.boxOnGoal));
 			str.append(" & ");
 		}
 		str.append(Board.boardHas(goals.get(goals.size() - 1), Board.boxOnGoal) + ";\n");
 		return str;
+	}
+
+	/* returns current board with just the goals and walls */
+	public Board eyesOnPrize() {
+		Board ret = this.copy();
+		for (int r = 0; r < ret.rows; r++) {
+			for (int c = 0; c < ret.cols; c++) {
+				Location curLocation = new Location(r, c);
+				if (ret.getCell(curLocation).equals(Board.box)) {
+					ret.setCell(curLocation, Board.floor);
+				} else if (ret.getCell(curLocation).equals(Board.boxOnGoal) ||
+						ret.getCell(curLocation).equals(Board.keeperOnGoal) ||
+						ret.getCell(curLocation).equals(Board.goal)) {
+					ret.setCell(curLocation, Board.goal);
+				}
+			}
+		}
+		return ret;
+	}
+
+	public Set<Location> getFloorLocations() {
+		HashSet<Location> ans = new HashSet<Location>();
+		for (int r = 0; r < this.rows; r++) {
+			for (int c = 0; c < this.cols; c++) {
+				Location curLocation = new Location(r, c);
+				if (this.getCell(curLocation).equals(Board.floor)) {
+					ans.add(curLocation);
+				}
+			}
+		}
+		return ans;
 	}
 
 }
