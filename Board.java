@@ -235,10 +235,10 @@ public class Board{
 						cellToString(cell[r][c]).equals(Board.keeperOnGoal)) {
 					goals.add(new Location(r, c));
 				}
-				
+
 			}
 		}
-		System.out.println(goals.size());
+		/* System.out.println(goals.size()); */
 		for (int ctr = 0; ctr < (goals.size() - 1); ctr++) {
 			str.append(Board.boardHas(goals.get(ctr), Board.boxOnGoal));
 			str.append(" & ");
