@@ -100,9 +100,21 @@ public class Board{
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		Board b = Board.readBoard("board3");
-
+		Board b = Board.readBoard("Boards/level1");
 		b.printBoard();
+		System.out.println("");
+		for (int r = 0; r < b.rows; r++) {
+			for (int c = 0; c < b.cols; c++) {
+
+				if (b.isCorner(new Location(r, c))) {
+					System.out.print(1);
+				} else {
+					System.out.print(0);
+				}
+			}
+			System.out.println();
+		}
+
 	}
 
 	public String getCell(Location l) {
@@ -139,11 +151,13 @@ public class Board{
         return Board.getBoard(loc) + " = " + s;
     }
 
+	/* Careful, this method should only be used while creating the smv file */
 	public boolean exists(Location loc) {
-		if( 0 <= loc.x & loc.x <= rows &
-		 0 <= loc.y & loc.y <= cols)
+		if (0 <= loc.x & loc.x <= this.rows &
+				0 <= loc.y & loc.y <= this.cols)
 			return true;
-		return false;
+		else
+			return false;
 	}
 	public static String cellToString(char a) {
 		return "\"" + a + "\"";
@@ -272,15 +286,22 @@ public class Board{
 	}
 
 	public boolean isCorner(Location loc) {
+		if (this.getCell(loc).equals(Board.wall)) {
+			return false;
+		}
 		Location above = Location.transpose(loc, Location.above);
 		Location below = Location.transpose(loc, Location.below);
 		Location left = Location.transpose(loc, Location.left);
 		Location right = Location.transpose(loc, Location.right);
 
-		boolean aWall = !exists(above) | this.getCell(above).equals(Board.wall);
-		boolean bWall = !exists(below) | this.getCell(below).equals(Board.wall);
-		boolean lWall = !exists(left) | this.getCell(left).equals(Board.wall);
-		boolean rWall = !exists(right) | this.getCell(right).equals(Board.wall);
+		boolean aWall = (above.x >= 0 && above.x < this.rows && above.y >= 0 && above.y < this.cols);
+		aWall = aWall ? this.getCell(above).equals(Board.wall) : false;
+		boolean bWall = (below.x >= 0 && below.x < this.rows && below.y >= 0 && below.y < this.cols);
+		bWall = bWall ? this.getCell(below).equals(Board.wall) : false;
+		boolean lWall = (left.x >= 0 && left.x < this.rows && left.y >= 0 && left.y < this.cols);
+		lWall = lWall ? this.getCell(left).equals(Board.wall) : false;
+		boolean rWall = (right.x >= 0 && right.x < this.rows && right.y >= 0 && right.y < this.cols);
+		rWall = rWall ? this.getCell(right).equals(Board.wall) : false;
 
 		if (aWall & lWall)
 			return true;
