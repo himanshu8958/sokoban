@@ -2,7 +2,8 @@ import java.io.*;
 import java.util.*;
 
 public class Board{
-    char[][] cell;
+	char[][] cell;
+	File boardFile;
     int rows = 0;
     int cols = 0;
 	public static final String keeper = "\"@\"";
@@ -27,6 +28,10 @@ public class Board{
 	public static final String boxLeft =  "boxLeft ";
 	public static final String boxRight = "boxRight";
 	public static final String boxUp =    "boxUp   ";
+
+	public File getBoardFile() {
+		return this.boardFile;
+	}
 
 	public String toString() {
 		StringBuilder str = new StringBuilder();
@@ -72,10 +77,11 @@ public class Board{
 		return true;
 	}
 
-	public Board(char[][] cell, int rows, int cols){
+	public Board(char[][] cell, int rows, int cols, File boardFile) {
 		this.cell = cell;
 		this.rows = rows;
 		this.cols = cols;
+		this.boardFile = boardFile;
 	}
 
 	public Board() {
@@ -90,7 +96,7 @@ public class Board{
 			for(int c = 0; c < this.cols; c++){
 				nuBoard[r][c] = this.cell[r][c];
 			}
-		return new Board(nuBoard, this.rows, this.cols);
+		return new Board(nuBoard, this.rows, this.cols, this.boardFile);
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
@@ -191,7 +197,7 @@ public class Board{
 	public Board getPartialBoard(Set<Location> currentBoxes, Set<Location> currentGoals){
 		if(currentBoxes.size() != currentGoals.size())
 			System.out.println("Same # of boxes and goals should be killed");
-		Board newBoard =  new Board(this.cell.clone(), this.rows, this.cols);
+		Board newBoard = new Board(this.cell.clone(), this.rows, this.cols, this.boardFile);
 		Set<Location> boxesToKill = this.getBoxPositions();
 		boxesToKill.removeAll(currentBoxes);
 		Set<Location> goalsToKill = this.getGoalPositions();

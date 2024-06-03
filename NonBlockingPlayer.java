@@ -2,45 +2,40 @@ import java.util.*;
 import java.io.*;
 
 public class NonBlockingPlayer extends Player {
-    String name;
     Location boxLocation;
-    public static void main(String[] args) {
-        System.out.println("hello");
-    }
 
-    public String getName() {
-        return name;
+    public static void main(String[] args) throws IOException {
+        Board aBoard = Board.readBoard("Board/board1");
+        NonBlockingPlayer nbPlayer = new NonBlockingPlayer(aBoard);
     }
 
     public Location getBoxLocation() {
         return this.boxLocation;
     }
 
-    public NonBlockingPlayer(Board b, String name, Location boxLocation) {
+    public NonBlockingPlayer(Board b) {
         super(b);
-        this.name = name;
-        this.boxLocation = boxLocation;
     }
 
     public Set<Location> getBlockingPositions() throws IOException, InterruptedException {
         HashSet<Location> blockingPositions = new HashSet<Location>();
         Board eyesOnPrize = this.getBoard().eyesOnPrize();
         Set<Location> floorLocations = eyesOnPrize.getFloorLocations();
-        Set<NonBlockingPlayer> blockCandidatePlayer = new HashSet<NonBlockingPlayer>();
+        Set<NonBlockingPlayer> pottentialBlockingPlayers = new HashSet<NonBlockingPlayer>();
         for (Location loc : floorLocations) {
             if (this.getBoard().isCorner(loc)) {
                 blockingPositions.add(loc);
             } else {
                 Board singleBox = eyesOnPrize.copy();
                 singleBox.setCell(loc, Board.box);
-                NonBlockingPlayer oneBoxPlay = new NonBlockingPlayer(singleBox, this.name + loc, loc);
-                blockCandidatePlayer.add(oneBoxPlay);
+                NonBlockingPlayer oneBoxPlay = new NonBlockingPlayer(singleBox);
+                pottentialBlockingPlayers.add(oneBoxPlay);
             }
         }
 
-        for (NonBlockingPlayer p : blockCandidatePlayer) {
-            File smvFile = new File(p.getName() + ".smv");
-            File outFile = new File(p.getName() + ".out");
+        for (NonBlockingPlayer p : pottentialBlockingPlayers) {
+            File smvFile = new File(p.getBoard().getBoardFile().getPath() + ".smv");
+            File outFile = new File(p.getBoard().getBoardFile().getPath() + ".out");
             p.writeSmv(smvFile);
             ModelChecker.checkInteractive(smvFile, p.getBound(), outFile);
             Play curPlay = Play.readTrace(p.getBoard(), outFile);
