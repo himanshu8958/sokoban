@@ -2,6 +2,7 @@ import java.util.*;
 import java.io.*;
 
 public class ModelChecker {
+
     public static void main(String[] args) throws Exception {
         ModelChecker.checkInteractive(new File("Boards/level1.smv"), 10, new File("Boards/level1.out"));
 
@@ -38,25 +39,37 @@ public class ModelChecker {
 
     public static void checkBdd(File smvFile, File outFile) throws IOException, InterruptedException {
         String[] commands = new String[] { "nuXmv", smvFile.getPath() };
-        ProcessBuilder pb = new ProcessBuilder(commands);    
+        ProcessBuilder pb = new ProcessBuilder(commands);
         pb.inheritIO();
-        
+
         pb.redirectOutput(outFile);
-    
+    }
+
+}
+
+    public static void checkInteractive(String partialName, int bound)
+            throws IOException, InterruptedException, Exception {
+        String[] commands = new String[] { "nuXmv", "-bmc", "-bmc_length", Integer.valueOf(bound).toString(),
+                partialName + ".smv" };
+        ProcessBuilder pb = new ProcessBuilder(commands);
+        pb.inheritIO();
+
+        pb.redirectOutput(new File(partialName));
+
         new Thread() {
             public void run() {
-                try{
+                try {
                     final Process process = pb.start();
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(process.getInputStream()));
-                    String line;            
+                    String line;
                     reader.close();
                     int exitVal = process.waitFor();
                     if (exitVal != 0) {
                         System.out.println("Abnormal Behaviour! Something bad happened.");
                     }
                 } catch (IOException | InterruptedException e) {
-                    System.out.println("Something went wrong. Here are more details\n"+e.getMessage());
+                    System.out.println("Something went wrong. Here are more details\n" + e.getMessage());
                 }
             }
         }.start();
