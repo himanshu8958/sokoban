@@ -7,6 +7,7 @@ public class NonBlockingPlayer extends Player {
     public static void main(String[] args) throws IOException {
         Board aBoard = Board.readBoard("Board/board1");
         NonBlockingPlayer nbPlayer = new NonBlockingPlayer(aBoard);
+        /* Set<Location> */
     }
 
     public Location getBoxLocation() {
@@ -23,6 +24,10 @@ public class NonBlockingPlayer extends Player {
         Set<Location> floorLocations = eyesOnPrize.getFloorLocations();
         Set<NonBlockingPlayer> pottentialBlockingPlayers = new HashSet<NonBlockingPlayer>();
         for (Location loc : floorLocations) {
+            if (this.getBoard().getGoalPositions().contains(loc)) {
+                continue; // a goal cannot be a blocking position
+            }
+            
             if (this.getBoard().isCorner(loc)) {
                 blockingPositions.add(loc);
             } else {
