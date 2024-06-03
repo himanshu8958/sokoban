@@ -1,12 +1,14 @@
 import java.util.*;
 
 public class NonBlockingPlayer extends Player {
+    String name;
     public static void main(String[] args) {
         System.out.println("hello");
     }
 
-    public NonBlockingPlayer(Board b) {
+    public NonBlockingPlayer(Board b, String name) {
         super(b);
+        this.name = name;
     }
 
     public Set<Location> getBlockingPositions() {
@@ -16,7 +18,8 @@ public class NonBlockingPlayer extends Player {
         for (Location loc : floorLocations) {
             Board singleBox = eyesOnPrize.copy();
             singleBox.setCell(loc, Board.box);
-            NonBlockingPlayer oneBoxPlay = new NonBlockingPlayer(singleBox);
+            NonBlockingPlayer oneBoxPlay = new NonBlockingPlayer(singleBox, this.name + loc);
+
         }
         return ret;
     }

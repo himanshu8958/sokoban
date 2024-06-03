@@ -7,6 +7,22 @@ public class Play {
     State initialState;
     File trace;
 
+    public boolean isWin() {
+        return isWinningPlay;
+    }
+
+    public StringBuilder LURD() {
+        StringBuilder str = new StringBuilder();
+        for (int ctr = 0; ctr < states.size(); ctr++) {
+            State curState = states.get(ctr + 1);
+            str.append(curState.direction);
+            if (ctr < states.size() - 1)
+                str.append(", ");
+            else
+                str.append('\n');
+        }
+        return str;
+    }
     public void playThePlay(){
         System.out.println("States : " + states.size());
         for(int ctr = 0; ctr < states.size(); ctr++ ){
@@ -16,7 +32,7 @@ public class Play {
         }
     }
     
-    public Play(Board initialBoard, File trace) {
+    private Play(Board initialBoard, File trace) {
         this.initialBoard = initialBoard;
         this.initialState = new State(initialBoard);
         this.trace = trace;

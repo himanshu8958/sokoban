@@ -13,7 +13,13 @@ public class Player {
         Player p = new Player(board);
         FileWriter out = new FileWriter(smvFile);
         /* System.out.println(p.smvWriter()); */
-        out.write(p.smvWriter());
+        out.write(p.smvCreator());
+        out.close();
+    }
+
+    public void writeSmv(File file) throws IOException {
+        PrintWriter out = new PrintWriter(file);
+        out.println(smvCreator());
         out.close();
     }
 
@@ -76,7 +82,7 @@ public class Player {
     String newLine = ";\n";
     String and = " & ";
 
-    public String smvWriter() {
+    public String smvCreator() {
         StringBuilder out = new StringBuilder();
         out.append("MODULE main\n\n");
         out.append("DEFINE\n");
