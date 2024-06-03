@@ -265,6 +265,28 @@ public class Board{
 		return ret;
 	}
 
+	public boolean isCorner(Location loc) {
+		Location above = Location.transpose(loc, Location.above);
+		Location below = Location.transpose(loc, Location.below);
+		Location left = Location.transpose(loc, Location.left);
+		Location right = Location.transpose(loc, Location.right);
+
+		boolean aWall = !exists(above) | this.getCell(above).equals(Board.wall);
+		boolean bWall = !exists(below) | this.getCell(below).equals(Board.wall);
+		boolean lWall = !exists(left) | this.getCell(left).equals(Board.wall);
+		boolean rWall = !exists(right) | this.getCell(right).equals(Board.wall);
+
+		if (aWall & lWall)
+			return true;
+		if (aWall & rWall)
+			return true;
+		if (bWall & lWall)
+			return true;
+		if (bWall & rWall)
+			return true;
+		return false;
+	}
+
 	public Set<Location> getFloorLocations() {
 		HashSet<Location> ans = new HashSet<Location>();
 		for (int r = 0; r < this.rows; r++) {
