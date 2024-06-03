@@ -100,10 +100,10 @@ public class Board{
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		Board b = Board.readBoard("Boards/level1");
+		Board b = Board.readBoard("Boards/board5");
 		b.printBoard();
 		System.out.println("");
-		for (int r = 0; r < b.rows; r++) {
+		for (int r = b.rows - 1; r >= 0; r--) {
 			for (int c = 0; c < b.cols; c++) {
 
 				if (b.isCorner(new Location(r, c))) {
@@ -164,7 +164,7 @@ public class Board{
 	}
 
 	public void printBoard() {
-		for ( int r = 0; r < rows; r++){
+		for (int r = this.rows - 1; r >= 0; r--) {
 			for( int c = 0; c < cols; c++) {
 				System.out.print(cell[r][c]);
 			}
