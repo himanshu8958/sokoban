@@ -43,19 +43,6 @@ public class ModelChecker {
         pb.inheritIO();
 
         pb.redirectOutput(outFile);
-    }
-
-}
-
-    public static void checkInteractive(String partialName, int bound)
-            throws IOException, InterruptedException, Exception {
-        String[] commands = new String[] { "nuXmv", "-bmc", "-bmc_length", Integer.valueOf(bound).toString(),
-                partialName + ".smv" };
-        ProcessBuilder pb = new ProcessBuilder(commands);
-        pb.inheritIO();
-
-        pb.redirectOutput(new File(partialName));
-
         new Thread() {
             public void run() {
                 try {
@@ -75,4 +62,5 @@ public class ModelChecker {
         }.start();
 
     }
+
 }
