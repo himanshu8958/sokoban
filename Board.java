@@ -194,7 +194,7 @@ public class Board{
     }
 
 	public Set<Location> getGoalPositions(){
-		Set<Location> goals = new HashSet<Location>();
+		Set<Location> goals = new TreeSet<Location>();
 		for(int r = 0; r < this.rows; r++){
 			for (int c = 0 ; c < this.cols; c++){
 				if(cellToString(this.cell[r][c]).equals(Board.goal) || 
@@ -231,7 +231,7 @@ public class Board{
 	}
 
 	public Set<Location> getBoxPositions(){
-		Set<Location> goals = new HashSet<Location>();
+		Set<Location> goals = new TreeSet<Location>();
 		for(int r = 0; r < this.rows; r++){
 			for (int c = 0 ; c < this.cols; c++){
 				if(cellToString(this.cell[r][c]).equals(Board.box) || 
@@ -315,7 +315,7 @@ public class Board{
 	}
 
 	public Set<Location> getFloorLocations() {
-		HashSet<Location> ans = new HashSet<Location>();
+		TreeSet<Location> ans = new TreeSet<Location>();
 		for (int r = 0; r < this.rows; r++) {
 			for (int c = 0; c < this.cols; c++) {
 				Location curLocation = new Location(r, c);

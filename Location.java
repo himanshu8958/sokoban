@@ -1,4 +1,4 @@
-public class Location{
+public class Location implements Comparable {
     int x;
     int y;
     public static final Location above = new Location(1, 0);
@@ -10,6 +10,20 @@ public class Location{
     public static final Location below2 = new Location(-2, 0);
     public static final Location left2 = new Location(0, -2);
     public static final Location right2 = new Location(0, 2);
+
+    public int compareTo(Object o) {
+        if (!(o instanceof Location)) {
+            return -1;
+        }
+        Location other = (Location) o;
+        if (this.x != other.x)
+            return this.x - other.x;
+        else if (this.y != other.y)
+            return this.y - other.y;
+        else
+            return 0;
+
+    }
     
     public Location(int x, int y) {
         this.x = x;

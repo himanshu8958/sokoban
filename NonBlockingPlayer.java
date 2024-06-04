@@ -1,23 +1,35 @@
 import java.util.*;
 import java.io.*;
 
-public class NonBlockingPlayer extends Player {
+public class NonBlockingPlayer extends Player implements Comparable {
     Location boxLocation;
 
+    public int compareTo(Object obj) {
+        if (!(obj instanceof NonBlockingPlayer)) {
+            return -1;
+        }
+        NonBlockingPlayer otherPlayer = (NonBlockingPlayer) obj;
+        return this.getBoxLocation().compareTo(otherPlayer.getBoxLocation());
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException {
-        Board aBoard = Board.readBoard(new File("Boards/board3"));
+        Board aBoard = Board.readBoard(new File("Boards/board7"));
         /* aBoard.printBoard(); */
         Board clearBoard = aBoard.eyesOnPrize();
-        System.out.println();
-        /* clearBoard.printBoard(); */
+        aBoard.printBoard();
 
-        NonBlockingPlayer nbPlayer = new NonBlockingPlayer(aBoard);
+        System.out.println();
+        clearBoard.printBoard();
+
+        NonBlockingPlayer nbPlayer = new NonBlockingPlayer(clearBoard);
 
         Set<Location> blockigLocations = nbPlayer.getBlockingPositions();
         nbPlayer.printBlockingPostions(blockigLocations);
         System.out.println();
         aBoard.printBoard();
+
     }
+
 
     public void printBlockingPostions(Set<Location> bPos) {
         for (int r = this.getBoard().rows - 1; r >= 0; r--) {
@@ -52,10 +64,10 @@ public class NonBlockingPlayer extends Player {
     }
 
     public Set<Location> getBlockingPositions() throws IOException, InterruptedException {
-        HashSet<Location> blockingPositions = new HashSet<Location>();
+        TreeSet<Location> blockingPositions = new TreeSet<Location>();
         Board eyesOnPrize = this.getBoard().eyesOnPrize();
         Set<Location> floorLocations = eyesOnPrize.getFloorLocations();
-        Set<NonBlockingPlayer> pottentialBlockingPlayers = new HashSet<NonBlockingPlayer>();
+        Set<NonBlockingPlayer> pottentialBlockingPlayers = new TreeSet<NonBlockingPlayer>();
         for (Location loc : floorLocations) {
             if (this.getBoard().getGoalPositions().contains(loc)) {
                 continue; // a goal cannot be a blocking position
@@ -103,7 +115,7 @@ public class NonBlockingPlayer extends Player {
         return (int) ((this.getBoard().rows + this.getBoard().cols));
     }
 
-    public String losingCondition() {
+    public String losingCondition() throws IOException, InterruptedException {
         return atLeastABoxOnGoal();
     }
 
