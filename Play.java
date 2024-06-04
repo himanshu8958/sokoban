@@ -2,7 +2,7 @@ import java.io.*;
 import java.util.*;
 public class Play {
     Map<Integer, State> states = new HashMap<Integer, State>();
-    Boolean isWinningPlay;
+    boolean isWinningPlay;
     Board initialBoard;
     State initialState;
     File trace;

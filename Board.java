@@ -33,6 +33,10 @@ public class Board{
 		return this.boardFile;
 	}
 
+	public void setBoardFile(File boardFile) {
+		this.boardFile = boardFile;
+	}
+
 	public String toString() {
 		StringBuilder str = new StringBuilder();
 		for (int r = 0; r < rows; r++) {
@@ -157,7 +161,7 @@ public class Board{
 
 	public void printBoard() {
 		for (int r = this.rows - 1; r >= 0; r--) {
-			for( int c = 0; c < cols; c++) {
+			for (int c = 0; c < this.cols; c++) {
 				System.out.print(cell[r][c]);
 			}
 			System.out.println();
@@ -272,7 +276,7 @@ public class Board{
 				if (ret.getCell(curLocation).equals(Board.box)) {
 					ret.setCell(curLocation, Board.floor);
 				} else if (ret.getCell(curLocation).equals(Board.boxOnGoal) ||
-						ret.getCell(curLocation).equals(Board.keeperOnGoal) ||
+				/* ret.getCell(curLocation).equals(Board.keeperOnGoal) || */
 						ret.getCell(curLocation).equals(Board.goal)) {
 					ret.setCell(curLocation, Board.goal);
 				}

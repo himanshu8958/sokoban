@@ -4,11 +4,12 @@ import java.io.*;
 public class ModelChecker {
 
     public static void main(String[] args) throws Exception {
-        ModelChecker.checkInteractive(new File("Boards/level1.smv"), 10, new File("Boards/level1.out"));
+        ModelChecker.checkInteractive(new File("Boards/level1.smv"), 10, new File("Boards/level1.out"),
+                new File("Boards/level.err"));
 
     }
 
-    public static void checkInteractive(File smvFile, int bound, File outFile)
+    public static void checkInteractive(File smvFile, int bound, File outFile, File errorFile)
             throws IOException, InterruptedException {
         String[] commands = new String[] { "nuXmv", "-bmc", "-bmc_length", Integer.valueOf(bound).toString(),
                 smvFile.getPath() };
@@ -16,10 +17,12 @@ public class ModelChecker {
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.inheritIO();
         pb.redirectOutput(outFile);
+        pb.redirectError(errorFile);
 
-        new Thread() {
-            public void run() {
-                try {
+        /*
+         * new Thread() {
+         * public void run() {
+         */ try {
                     final Process process = pb.start();
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(process.getInputStream()));
@@ -32,8 +35,10 @@ public class ModelChecker {
                 } catch (IOException | InterruptedException e) {
                     System.out.println("Something went wrong. Here are more details\n" + e.getMessage());
                 }
-            }
-        }.start();
+                /*
+                 * }
+                 * }.start();
+                 */
 
     }
 

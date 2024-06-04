@@ -21,7 +21,7 @@ public class Location{
     }
 
     public String toString() {
-        return "(" + x + ", "+ y + ") ";
+        return "(" + x + ", " + y + ")";
     }
 
     public boolean equals(Object b) {

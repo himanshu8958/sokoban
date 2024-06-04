@@ -5,9 +5,37 @@ public class NonBlockingPlayer extends Player {
     Location boxLocation;
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        Board aBoard = Board.readBoard(new File("Boards/board1"));
+        Board aBoard = Board.readBoard(new File("Boards/board3"));
+        /* aBoard.printBoard(); */
+        Board clearBoard = aBoard.eyesOnPrize();
+        System.out.println();
+        /* clearBoard.printBoard(); */
+
         NonBlockingPlayer nbPlayer = new NonBlockingPlayer(aBoard);
+
         Set<Location> blockigLocations = nbPlayer.getBlockingPositions();
+        nbPlayer.printBlockingPostions(blockigLocations);
+        System.out.println();
+        aBoard.printBoard();
+    }
+
+    public void printBlockingPostions(Set<Location> bPos) {
+        for (int r = this.getBoard().rows - 1; r >= 0; r--) {
+            for (int c = 0; c < this.getBoard().cols; c++) {
+                Location cur = new Location(r, c);
+                if (bPos.contains(cur)) {
+                    System.out.print(1);
+                } else {
+                    if (this.getBoard().getCell(cur).equals(Board.wall)) {
+                        System.out.print("#");
+                    } else {
+                        System.out.print(0);
+                    }
+                }
+            }
+            System.out.println();
+
+        }
     }
 
     public Location getBoxLocation() {
@@ -16,6 +44,11 @@ public class NonBlockingPlayer extends Player {
 
     public NonBlockingPlayer(Board b) {
         super(b);
+    }
+
+    public NonBlockingPlayer(Board b, Location boxLocation) {
+        super(b);
+        this.boxLocation = boxLocation;
     }
 
     public Set<Location> getBlockingPositions() throws IOException, InterruptedException {
@@ -33,7 +66,9 @@ public class NonBlockingPlayer extends Player {
             } else {
                 Board singleBox = eyesOnPrize.copy();
                 singleBox.setCell(loc, Board.box);
-                NonBlockingPlayer oneBoxPlay = new NonBlockingPlayer(singleBox);
+                File singleBoxFile = new File(singleBox.getBoardFile().getPath() + File.pathSeparator + loc);
+                singleBox.setBoardFile(singleBoxFile);
+                NonBlockingPlayer oneBoxPlay = new NonBlockingPlayer(singleBox, loc);
                 pottentialBlockingPlayers.add(oneBoxPlay);
             }
         }
@@ -41,20 +76,31 @@ public class NonBlockingPlayer extends Player {
         for (NonBlockingPlayer p : pottentialBlockingPlayers) {
             File smvFile = new File(p.getBoard().getBoardFile().getPath() + ".smv");
             File outFile = new File(p.getBoard().getBoardFile().getPath() + ".out");
+            File errFile = new File(p.getBoard().getBoardFile().getPath() + ".err");
+            System.out.println(smvFile.getPath());
+            p.getBoard().printBoard();
+            System.out.println();
+
             p.writeSmv(smvFile);
-            ModelChecker.checkInteractive(smvFile, p.getBound(), outFile);
+            ModelChecker.checkInteractive(smvFile, p.getBound(), outFile, errFile);
             Play curPlay = Play.readTrace(p.getBoard(), outFile);
             if (!curPlay.isWin()) {
                 blockingPositions.add(p.getBoxLocation());
+                System.out.println("blocking position");
             }
+            else {
+                System.out.println("not a blocking position");
+            }
+            System.out.println("..................................................");
         }
         return blockingPositions;
     }
 
+
     // This method will decide the aggresiveness of the starategy, how far will yo
     // go to find all the blocking positions?
     public int getBound() {
-        return (int) ((this.getBoard().rows + this.getBoard().cols) * 3);
+        return (int) ((this.getBoard().rows + this.getBoard().cols));
     }
 
     public String losingCondition() {
