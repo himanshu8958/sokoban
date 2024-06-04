@@ -16,7 +16,7 @@ public class Sokoban {
                 File boardFile = new File(args[1]);
                 File smvFile = new File(args[1] + ".smv");
                 File traceFile = new File(args[1] + ".out");
-                Board board = Board.readBoard(boardFile.getPath());
+                Board board = Board.readBoard(boardFile);
 
                 if (args[0].equals("-os") || args[0].equals("-oneShot")) {
                     /* Q2 */

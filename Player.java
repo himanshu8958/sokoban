@@ -6,9 +6,10 @@ public class Player {
         this.b = b;
     }
 
-    public static void main(String[] args) throws IOException {
+    public static void main(String[] args) throws IOException, InterruptedException {
         String curBoard = args[0];
-        Board board = Board.readBoard(curBoard);
+        File boardFile = new File(curBoard);
+        Board board = Board.readBoard(boardFile);
         File smvFile = new File(curBoard + ".smv");
         Player p = new Player(board);
         FileWriter out = new FileWriter(smvFile);

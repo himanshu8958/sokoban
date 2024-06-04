@@ -4,10 +4,10 @@ import java.io.*;
 public class NonBlockingPlayer extends Player {
     Location boxLocation;
 
-    public static void main(String[] args) throws IOException {
-        Board aBoard = Board.readBoard("Board/board1");
+    public static void main(String[] args) throws IOException, InterruptedException {
+        Board aBoard = Board.readBoard(new File("Boards/board1"));
         NonBlockingPlayer nbPlayer = new NonBlockingPlayer(aBoard);
-        /* Set<Location> */
+        Set<Location> blockigLocations = nbPlayer.getBlockingPositions();
     }
 
     public Location getBoxLocation() {
@@ -27,7 +27,7 @@ public class NonBlockingPlayer extends Player {
             if (this.getBoard().getGoalPositions().contains(loc)) {
                 continue; // a goal cannot be a blocking position
             }
-            
+
             if (this.getBoard().isCorner(loc)) {
                 blockingPositions.add(loc);
             } else {

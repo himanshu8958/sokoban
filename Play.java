@@ -114,10 +114,10 @@ public class Play {
     
 
     public static void main(String[] args) throws IOException{
-        String fileName = "Boards/board1";
-        Board b = Board.readBoard(fileName);
+        File boardFile = new File("Boards/board1");
+        Board b = Board.readBoard(boardFile);
         
-        Play aPlay = Play.readTrace(b, new File(fileName + ".out"));
+        Play aPlay = Play.readTrace(b, new File(boardFile + ".out"));
         aPlay.playThePlay();
     }
     

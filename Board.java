@@ -84,12 +84,6 @@ public class Board{
 		this.boardFile = boardFile;
 	}
 
-	public Board() {
-		this.cell = null;
-		this.rows = 0;
-		this.cols = 0;
-	}
-	
 	public Board copy(){
 		char [][] nuBoard = new char[this.rows] [this.cols];
 		for(int r = 0; r < this.rows; r++) 
@@ -100,12 +94,11 @@ public class Board{
 	}
 	
 	public static void main(String[] args) throws FileNotFoundException {
-		Board b = Board.readBoard("Boards/board5");
+		Board b = Board.readBoard(new File("Boards/board1"));
 		b.printBoard();
 		System.out.println("");
 		for (int r = b.rows - 1; r >= 0; r--) {
 			for (int c = 0; c < b.cols; c++) {
-
 				if (b.isCorner(new Location(r, c))) {
 					System.out.print(1);
 				} else {
@@ -114,7 +107,6 @@ public class Board{
 			}
 			System.out.println();
 		}
-
 	}
 
 	public String getCell(Location l) {
@@ -172,25 +164,29 @@ public class Board{
 		}
 	}
 
-    public static Board readBoard (String path) throws FileNotFoundException {
-		Scanner file = new Scanner( new File ( path));
-		Board b = new Board();
+	public static Board readBoard(File boardFile) throws FileNotFoundException {
+		Scanner file = new Scanner(boardFile);
+		int rows = 0;
+		int cols = 0;
+
 		while(file.hasNextLine()) {
-			b.rows++;
-			b.cols = file.nextLine().length();
+			rows++;
+			cols = file.nextLine().length();
 		}
-		file = new Scanner(new File(path));
-		b.cell = new char[b.rows][b.cols];
 
+		char[][] cell = new char[rows][cols];
 
-		for(int r = b.rows -1 ; r >= 0; r--) {
+		file.close();
+		file = new Scanner(boardFile);
+		for (int r = rows - 1; r >= 0; r--) {
 			String line = file.nextLine();
-			for(int c = 0; c < b.cols; c++){
-				b.cell[r][c] = line.charAt(c);
+			for (int c = 0; c < cols; c++) {
+
+				cell[r][c] = line.charAt(c);
 			}
 		}
 		file.close();
-		return b;
+		return new Board(cell, rows, cols, boardFile);
     }
 
 	public Set<Location> getGoalPositions(){
