@@ -5,6 +5,7 @@ public class Play {
     boolean isWinningPlay;
     Board initialBoard;
     State initialState;
+    State winnigState;
     File trace;
 
     public boolean isWin() {
@@ -36,6 +37,10 @@ public class Play {
         this.initialBoard = initialBoard;
         this.initialState = new State(initialBoard);
         this.trace = trace;
+    }
+
+    public State getWinnState() {
+        return this.winnigState;
     }
 
     public static Play readTrace(Board initialBoard, File trace) throws IOException {
@@ -78,6 +83,11 @@ public class Play {
                 String colS = indices[1].substring(indices[1].indexOf('[') + 1);
                 
                 currentState.board.cell[Integer.valueOf(rowS)][Integer.valueOf(colS)] = value.charAt(0);
+                if (currentState.getBoard().getCell(new Location(Integer.valueOf(rowS), Integer.valueOf(colS)))
+                        .equals(Board.boxOnGoal)) {
+                    thisPlay.winnigState = currentState;
+                }
+
             } else if( line.contains("row =")){
                 currentState.row = Integer.parseInt(line.split("=")[1].trim());
             } else if (line.contains("col =")) {

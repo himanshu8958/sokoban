@@ -60,6 +60,9 @@ public class State{
         return str.toString();
     }
 
+    public Board getBoard() {
+        return this.board;
+    }
     public State (Board b) {
         this.board = b;
         this.direction = "";
