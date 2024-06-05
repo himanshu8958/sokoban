@@ -16,13 +16,15 @@ public class Sokoban {
                 File boardFile = new File(args[1]);
                 File smvFile = new File(args[1] + ".smv");
                 File traceFile = new File(args[1] + ".out");
+                File errFile = new File(args[1] + ".err");
+
                 Board board = Board.readBoard(boardFile);
 
                 if (args[0].equals("-os") || args[0].equals("-oneShot")) {
                     /* Q2 */
                     Player player = new Player(board);
                     player.writeSmv(smvFile);
-                    ModelChecker.checkBdd(smvFile, traceFile);
+                    ModelChecker.checkBdd(smvFile, traceFile, errFile);
                     Play thisPlay = Play.readTrace(board, traceFile);
                     if (thisPlay.isWin()) {
                         System.out.println("There exists a way to solve this board");

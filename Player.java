@@ -241,7 +241,7 @@ public class Player {
     }
     
     /* This method must be overridden inorder to change the winning condition */
-    public String losingCondition() throws IOException, InterruptedException {
+    public String losingCondition() {
         return ("LTLSPEC NAME iNeverWin := G(!won);\n");
     }
 

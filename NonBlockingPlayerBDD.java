@@ -1,15 +1,9 @@
-import java.util.*;
 import java.io.*;
+import java.util.*;
 
-public class NonBlockingPlayer extends Player implements Comparable {
-    Location boxLocation;
-
-    public int compareTo(Object obj) {
-        if (!(obj instanceof NonBlockingPlayer)) {
-            return -1;
-        }
-        NonBlockingPlayer otherPlayer = (NonBlockingPlayer) obj;
-        return this.getBoxLocation().compareTo(otherPlayer.getBoxLocation());
+public class NonBlockingPlayerBDD extends NonBlockingPlayer {
+    public NonBlockingPlayerBDD(Board b) {
+        super(b);
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -21,57 +15,32 @@ public class NonBlockingPlayer extends Player implements Comparable {
         System.out.println();
         clearBoard.printBoard();
 
-        NonBlockingPlayer nbPlayer = new NonBlockingPlayer(clearBoard);
+        NonBlockingPlayerBDD nbPlayer = new NonBlockingPlayerBDD(clearBoard);
 
         Set<Location> blockigLocations = nbPlayer.getBlockingPositions();
-        blockigLocations = nbPlayer.getBlockingPositions();
-        blockigLocations = nbPlayer.getBlockingPositions();
         nbPlayer.printBlockingPostions(blockigLocations);
         System.out.println();
         aBoard.printBoard();
 
     }
 
-
-    public void printBlockingPostions(Set<Location> bPos) {
-        for (int r = this.getBoard().rows - 1; r >= 0; r--) {
-            for (int c = 0; c < this.getBoard().cols; c++) {
-                Location cur = new Location(r, c);
-                if (bPos.contains(cur)) {
-                    System.out.print(1);
-                } else {
-                    if (this.getBoard().getCell(cur).equals(Board.wall)) {
-                        System.out.print("#");
-                    } else {
-                        System.out.print(0);
-                    }
-                }
-            }
-            System.out.println();
-
-        }
-    }
-
-    public Location getBoxLocation() {
-        return this.boxLocation;
-    }
-
-    public NonBlockingPlayer(Board b) {
-        super(b);
-    }
-
-    public NonBlockingPlayer(Board b, Location boxLocation) {
-        super(b);
-        this.boxLocation = boxLocation;
-    }
-
     public Set<Location> getBlockingPositions() throws IOException, InterruptedException {
         TreeSet<Location> blockingPositions = new TreeSet<Location>();
         Board eyesOnPrize = this.getBoard().eyesOnPrize();
-        Set<Location> floorLocations = eyesOnPrize.getFloorLocations();
+        boolean change = true;
+        Set<Location> pottentialBlocks = super.getBlockingPositions();
+        while (change) {
+            System.out.println("blocked " + pottentialBlocks.size());
+            Set<Location> nuFloorLocations = super.getBlockingPositions();
+            if (nuFloorLocations.size() == pottentialBlocks.size()) {
+                change = false;
+
+            }
+            pottentialBlocks = nuFloorLocations;
+        }
         Set<NonBlockingPlayer> pottentialBlockingPlayers = new TreeSet<NonBlockingPlayer>();
-        for (Location loc : floorLocations) {
-            if (this.getGoalPositions().contains(loc)) {
+        for (Location loc : pottentialBlocks) {
+            if (this.getBoard().getGoalPositions().contains(loc)) {
                 continue; // a goal cannot be a blocking position
             }
 
@@ -97,43 +66,19 @@ public class NonBlockingPlayer extends Player implements Comparable {
             System.out.println();
 
             p.writeSmv(smvFile);
-            ModelChecker.checkInteractive(smvFile, p.getBound(), outFile, errFile);
+            ModelChecker.checkBdd(smvFile, outFile, errFile);
             Play curPlay = Play.readTrace(p.getBoard(), outFile);
             if (!curPlay.isWin()) {
                 blockingPositions.add(p.getBoxLocation());
-                System.out.println("may be a blocking position: bmc");
-            }
-            else {
-                this.addPositionReachesGoal(p.getBoxLocation());
+                System.out.println("blocking position for sure!");
+            } else {
                 System.out.println("not a blocking position");
-                System.out.println("positions that can reach a goal : " + this.getGoalPositions().size());
+                this.addPositionReachesGoal(p.getBoxLocation());
+
             }
             System.out.println("..................................................");
         }
         return blockingPositions;
-    }
-
-
-    // This method will decide the aggresiveness of the starategy, how far will yo
-    // go to find all the blocking positions?
-    public int getBound() {
-        return 2;
-    }
-
-    public String losingCondition() {
-        return atLeastABoxOnGoal();
-    }
-
-    public static Set<Location> goals = null;
-
-    public Set<Location> getGoalPositions() {
-        if (this.goals == null)
-            goals = this.getBoard().getGoalPositions();
-        return goals;
-    }
-
-    public void addPositionReachesGoal(Location loc) {
-        this.goals.add(loc);
     }
 
     private String atLeastABoxOnGoal() {
@@ -154,4 +99,5 @@ public class NonBlockingPlayer extends Player implements Comparable {
         }
         return str.toString();
     }
+
 }
