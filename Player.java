@@ -18,7 +18,7 @@ public class Player {
         out.close();
     }
 
-    public void writeSmv(File file) throws IOException {
+    public void writeSmv(File file) throws IOException, InterruptedException {
         PrintWriter out = new PrintWriter(file);
         out.println(smvCreator());
         out.close();
@@ -83,7 +83,7 @@ public class Player {
     String newLine = ";\n";
     String and = " & ";
 
-    public String smvCreator() {
+    public String smvCreator() throws IOException, InterruptedException {
         StringBuilder out = new StringBuilder();
         out.append("MODULE main\n\n");
         out.append("DEFINE\n");
@@ -241,7 +241,7 @@ public class Player {
     }
     
     /* This method must be overridden inorder to change the winning condition */
-    public String losingCondition() {
+    public String losingCondition() throws IOException, InterruptedException {
         return ("LTLSPEC NAME iNeverWin := G(!won);\n");
     }
 

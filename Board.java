@@ -197,6 +197,19 @@ public class Board{
 		return this.rows + this.cols;
 	}
 
+	public Set<Location> getReachedGoals() {
+		Set<Location> reachedGoals = new TreeSet<Location>();
+		for (int r = 0; r < this.rows; r++) {
+			for (int c = 0; c < this.cols; c++) {
+				if (cellToString(this.cell[r][c]).equals(Board.boxOnGoal)) {
+					reachedGoals.add(new Location(r, c));
+				}
+
+			}
+		}
+		return reachedGoals;
+	}
+
 	public Set<Location> getGoalPositions(){
 		Set<Location> goals = new TreeSet<Location>();
 		for(int r = 0; r < this.rows; r++){

@@ -1,3 +1,4 @@
+
 import java.util.*;
 import java.io.*;
 
@@ -120,7 +121,7 @@ public class NonBlockingPlayer extends Player implements Comparable {
         return 2;
     }
 
-    public String losingCondition() {
+    public String losingCondition() throws IOException, InterruptedException {
         return atLeastABoxOnGoal();
     }
 
