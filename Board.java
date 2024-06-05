@@ -39,8 +39,8 @@ public class Board{
 
 	public String toString() {
 		StringBuilder str = new StringBuilder();
-		for (int r = 0; r < rows; r++) {
-			for (int c = 0; c < cols; c++) {
+		for (int r = this.rows - 1; r >= 0; r--) {
+			for (int c = 0; c < this.cols; c++) {
 				str.append(cell[r][c]);
 			}
 			str.append('\n');
@@ -173,7 +173,7 @@ public class Board{
 		int rows = 0;
 		int cols = 0;
 
-		while(file.hasNextLine()) {
+		while (file.hasNextLine()) {
 			rows++;
 			cols = file.nextLine().length();
 		}
@@ -191,7 +191,11 @@ public class Board{
 		}
 		file.close();
 		return new Board(cell, rows, cols, boardFile);
-    }
+	}
+
+	public int size() {
+		return this.rows + this.cols;
+	}
 
 	public Set<Location> getGoalPositions(){
 		Set<Location> goals = new TreeSet<Location>();

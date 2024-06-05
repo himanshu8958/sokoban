@@ -42,15 +42,18 @@ public class ModelChecker {
 
     }
 
-    public static void checkBdd(File smvFile, File outFile) throws IOException, InterruptedException {
+    public static void checkBdd(File smvFile, File outFile, File errFile) throws IOException, InterruptedException {
         String[] commands = new String[] { "nuXmv", smvFile.getPath() };
         ProcessBuilder pb = new ProcessBuilder(commands);
         pb.inheritIO();
 
         pb.redirectOutput(outFile);
-        new Thread() {
-            public void run() {
-                try {
+        pb.redirectError(errFile);
+
+        /*
+         * new Thread() {
+         * public void run() {
+         */ try {
                     final Process process = pb.start();
                     BufferedReader reader = new BufferedReader(
                             new InputStreamReader(process.getInputStream()));
@@ -64,8 +67,10 @@ public class ModelChecker {
                     System.out.println("Something went wrong. Here are more details\n" + e.getMessage());
                 }
             }
-        }.start();
-
-    }
+            /*
+             * }.start();
+             * 
+             * }
+             */
 
 }
