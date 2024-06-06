@@ -28,6 +28,10 @@ public class Player {
         return this.b;
     }
 
+    public void setBoard(Board b) {
+        this.b = b;
+    }
+
     public StringBuilder and(String... args) {
         StringBuilder str = new  StringBuilder();
         for (int ctr = 0; ctr < args.length -1; ctr ++){

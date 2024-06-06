@@ -13,6 +13,15 @@ public class NonBlockingPlayer extends Player implements Comparable {
         return this.getBoxLocation().compareTo(otherPlayer.getBoxLocation());
     }
 
+    public NonBlockingPlayer(Board b) {
+        super(b);
+    }
+
+    public NonBlockingPlayer(Board b, Location boxLocation) {
+        this(b);
+        this.boxLocation = boxLocation;
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException {
         Board aBoard = Board.readBoard(new File("Boards/board7"));
         /* aBoard.printBoard(); */
@@ -57,14 +66,7 @@ public class NonBlockingPlayer extends Player implements Comparable {
         return this.boxLocation;
     }
 
-    public NonBlockingPlayer(Board b) {
-        super(b);
-    }
 
-    public NonBlockingPlayer(Board b, Location boxLocation) {
-        super(b);
-        this.boxLocation = boxLocation;
-    }
 
     public Set<Location> getBlockingPositions() throws IOException, InterruptedException {
         TreeSet<Location> blockingPositions = new TreeSet<Location>();

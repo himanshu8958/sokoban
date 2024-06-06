@@ -17,8 +17,8 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
 
         NonBlockingPlayerBDD nbPlayer = new NonBlockingPlayerBDD(clearBoard);
 
-        Set<Location> blockigLocations = nbPlayer.getBlockingPositions();
-        nbPlayer.printBlockingPostions(blockigLocations);
+        Set<Location> blockingLocations = nbPlayer.getBlockingPositions();
+        nbPlayer.printBlockingPostions(blockingLocations);
         System.out.println();
         aBoard.printBoard();
 
