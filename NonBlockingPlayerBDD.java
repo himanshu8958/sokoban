@@ -29,6 +29,8 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
         Board eyesOnPrize = this.getBoard().eyesOnPrize();
         boolean change = true;
         Set<Location> pottentialBlocks = super.getBlockingPositions();
+        System.out.println("================================================================");
+        System.out.println("BMC could not solve : " + pottentialBlocks.size());
         while (change) {
             System.out.println("blocked " + pottentialBlocks.size());
             Set<Location> nuFloorLocations = super.getBlockingPositions();
@@ -40,7 +42,7 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
         }
         Set<NonBlockingPlayer> pottentialBlockingPlayers = new TreeSet<NonBlockingPlayer>();
         for (Location loc : pottentialBlocks) {
-            if (this.getBoard().getGoalPositions().contains(loc)) {
+            if (this.getBoard().getGoals().contains(loc)) {
                 continue; // a goal cannot be a blocking position
             }
 
@@ -87,7 +89,7 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
         Iterator<Location> iter = this.getGoalPositions().iterator();
         while (iter.hasNext()) {
             Location curGoal = iter.next();
-            if (this.getBoard().getGoalPositions().contains(curGoal))
+            if (this.getBoard().getGoals().contains(curGoal))
                 str.append(Board.boardHas(curGoal, Board.boxOnGoal));
             else if (this.getBoard().getFloorLocations().contains(curGoal))
                 str.append(Board.boardHas(curGoal, Board.box));

@@ -210,7 +210,13 @@ public class Board{
 		return reachedGoals;
 	}
 
-	public Set<Location> getGoalPositions(){
+	public Set<Location> getRemainingGoals() {
+		Set<Location> goals = getGoals();
+		goals.removeAll(getReachedGoals());
+		return goals;
+	}
+
+	public Set<Location> getGoals() {
 		Set<Location> goals = new TreeSet<Location>();
 		for(int r = 0; r < this.rows; r++){
 			for (int c = 0 ; c < this.cols; c++){
@@ -231,7 +237,7 @@ public class Board{
 		Board newBoard = new Board(this.cell.clone(), this.rows, this.cols, this.boardFile);
 		Set<Location> boxesToKill = this.getBoxPositions();
 		boxesToKill.removeAll(currentBoxes);
-		Set<Location> goalsToKill = this.getGoalPositions();
+		Set<Location> goalsToKill = this.getGoals();
 		goalsToKill.removeAll(currentGoals);
 
 		for(Location deadBox : boxesToKill){

@@ -131,7 +131,7 @@ public class NonBlockingPlayer extends Player implements Comparable {
 
     public Set<Location> getGoalPositions() {
         if (this.goals == null)
-            goals = this.getBoard().getGoalPositions();
+            goals = this.getBoard().getGoals();
         return goals;
     }
 
@@ -145,7 +145,7 @@ public class NonBlockingPlayer extends Player implements Comparable {
         Iterator<Location> iter = this.getGoalPositions().iterator();
         while (iter.hasNext()) {
             Location curGoal = iter.next();
-            if (this.getBoard().getGoalPositions().contains(curGoal))
+            if (this.getBoard().getGoals().contains(curGoal))
                 str.append(Board.boardHas(curGoal, Board.boxOnGoal));
             else if (this.getBoard().getFloorLocations().contains(curGoal))
                 str.append(Board.boardHas(curGoal, Board.box));
