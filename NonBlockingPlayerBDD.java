@@ -6,6 +6,10 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
         super(b);
     }
 
+    public NonBlockingPlayerBDD(Board b, Location loc) {
+        super(b, loc);
+    }
+
     public static void main(String[] args) throws IOException, InterruptedException {
         Board aBoard = Board.readBoard(new File("Boards/board7"));
         /* aBoard.printBoard(); */
@@ -31,16 +35,7 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
         Set<Location> pottentialBlocks = super.getBlockingPositions();
         System.out.println("================================================================");
         System.out.println("BMC could not solve : " + pottentialBlocks.size());
-        while (change) {
-            System.out.println("blocked " + pottentialBlocks.size());
-            Set<Location> nuFloorLocations = super.getBlockingPositions();
-            if (nuFloorLocations.size() == pottentialBlocks.size()) {
-                change = false;
-
-            }
-            pottentialBlocks = nuFloorLocations;
-        }
-        Set<NonBlockingPlayer> pottentialBlockingPlayers = new TreeSet<NonBlockingPlayer>();
+        Set<NonBlockingPlayerBDD> pottentialBlockingPlayers = new TreeSet<NonBlockingPlayerBDD>();
         for (Location loc : pottentialBlocks) {
             if (this.getBoard().getGoals().contains(loc)) {
                 continue; // a goal cannot be a blocking position
@@ -54,12 +49,12 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
                 singleBox.setCell(loc, Board.box);
                 File singleBoxFile = new File(singleBox.getBoardFile().getPath() + loc);
                 singleBox.setBoardFile(singleBoxFile);
-                NonBlockingPlayer oneBoxPlay = new NonBlockingPlayer(singleBox, loc);
+                NonBlockingPlayerBDD oneBoxPlay = new NonBlockingPlayerBDD(singleBox, loc);
                 pottentialBlockingPlayers.add(oneBoxPlay);
             }
         }
 
-        for (NonBlockingPlayer p : pottentialBlockingPlayers) {
+        for (NonBlockingPlayerBDD p : pottentialBlockingPlayers) {
             File smvFile = new File(p.getBoard().getBoardFile().getPath() + ".smv");
             File outFile = new File(p.getBoard().getBoardFile().getPath() + ".out");
             File errFile = new File(p.getBoard().getBoardFile().getPath() + ".err");

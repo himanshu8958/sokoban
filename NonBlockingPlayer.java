@@ -34,8 +34,6 @@ public class NonBlockingPlayer extends Player implements Comparable {
         NonBlockingPlayer nbPlayer = new NonBlockingPlayer(clearBoard);
 
         Set<Location> blockigLocations = nbPlayer.getBlockingPositions();
-        blockigLocations = nbPlayer.getBlockingPositions();
-        blockigLocations = nbPlayer.getBlockingPositions();
         nbPlayer.printBlockingPostions(blockigLocations);
         System.out.println();
         aBoard.printBoard();
@@ -120,7 +118,7 @@ public class NonBlockingPlayer extends Player implements Comparable {
     // This method will decide the aggresiveness of the starategy, how far will yo
     // go to find all the blocking positions?
     public int getBound() {
-        return 2;
+        return 6;
     }
 
     public String losingCondition() throws IOException, InterruptedException {

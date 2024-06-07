@@ -33,10 +33,10 @@ public class Sokoban {
                         System.out.println("This board is unsolvable");
                     }
 
-                } else if (args[0].equals("-osn") || args[0].equals("-oneShotNonBlocking")) {
-                    /* Q2 but nonBlocking */
                 } else if (args[0].equals("-itr") || args[0].equals("-iterative")) {
                     /* Q4 */
+                    IterativePlayer plyr = new IterativePlayer(board);
+                    plyr.writeSmv(smvFile);
                 }
             default:
                 break;
@@ -46,8 +46,6 @@ public class Sokoban {
     private static String help() {
         return "Sokoban \n\n" +
                 "-os or -oneShot : does the Q2 in the simplest way. \n\n" +
-                "-osn or -oneShotNonBlocking : Q2 but we find the blocking locations in the board and mark it for the solver\n\n"
-                +
                 "-itr or -iterative: Q4 ";
     }
 }
