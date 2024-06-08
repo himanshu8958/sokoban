@@ -37,6 +37,7 @@ public class Play {
         this.initialBoard = initialBoard;
         this.initialState = new State(initialBoard);
         this.trace = trace;
+        winnigState = initialState;
     }
 
     public State getWinnState() {
