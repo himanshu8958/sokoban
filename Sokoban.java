@@ -35,7 +35,7 @@ public class Sokoban {
 
                 } else if (args[0].equals("-itr") || args[0].equals("-iterative")) {
                     /* Q4 */
-                    IterativePlayer plyr = new IterativePlayer(board);
+                    IterativePlayer plyr = new IterativePlayer(board, boardFile);
                     plyr.writeSmv(smvFile);
                 }
             default:

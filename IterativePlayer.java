@@ -2,22 +2,53 @@ import java.util.*;
 import java.io.*;
 
 public class IterativePlayer extends Player {
+    SortedSet<Location> goalsReached = new TreeSet<Location>();
+    File initialBoardFile = null;
+
+    public File getInitialBoardFile() {
+        return this.initialBoardFile;
+    }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        File boardFile = new File("Boards/board1");
+        File boardFile = new File(args[0]);
         File smvFile = new File(boardFile.getPath() + ".smv");
         File ouFile = new File(boardFile.getPath() + ".out");
         File errFile = new File(boardFile.getPath() + ".err");
         Board aBoard = Board.readBoard(boardFile);
         /* aBoard.printBoard(); */
 
-        IterativePlayer p = new IterativePlayer(aBoard);
+        IterativePlayer p = new IterativePlayer(aBoard, boardFile);
         aBoard.printBoard();
         p.writeSmv(smvFile);
+        ModelChecker.checkBdd(smvFile, ouFile, errFile);
+        Play thisPlay = Play.readTrace(aBoard, ouFile);
+        System.out.println("The  winning state");
+        thisPlay.getWinnState().getBoard().printBoard();
     }
 
-    public IterativePlayer(Board b) {
+    public IterativePlayer(Board b, File initBoardFile) {
         super(b);
+        this.initialBoardFile = initBoardFile;
+    }
+
+    public static File getFileMentioningReached(Board board, File boardFile) {
+        StringBuilder str = new StringBuilder();
+        str.append(boardFile.getPath());
+        for (Location loc : board.getReachedGoals()) {
+            str.append(loc.toString());
+        }
+        return new File(str.toString());
+    }
+
+    public static Board oneIteration(Board curBoard, File initBoardFile) throws IOException, InterruptedException {
+        File smvFile = new File(IterativePlayer.getFileMentioningReached(curBoard, initBoardFile).getPath() + ".smv");
+        File outFile = new File(IterativePlayer.getFileMentioningReached(curBoard, initBoardFile).getPath() + ".out");
+        File errFile = new File(IterativePlayer.getFileMentioningReached(curBoard, initBoardFile).getPath() + ".err");
+
+        IterativePlayer plyr = new IterativePlayer(curBoard, initBoardFile);
+        ModelChecker.checkBdd(smvFile, outFile, errFile);
+        Play thisPlay = Play.readTrace(curBoard, outFile);
+        return thisPlay.getWinnState().getBoard();
     }
 
     private Set<Location> getBlockingPositions() throws IOException, InterruptedException {
@@ -71,7 +102,7 @@ public class IterativePlayer extends Player {
                 if (nGoalIter.hasNext()) {
                     str.append(Board.boardHas(cur, Board.boxOnGoal) + " | ");
                 } else {
-                    str.append(Board.boardHas(cur, Board.boxOnGoal) + " )); ");
+                    str.append(Board.boardHas(cur, Board.boxOnGoal) + " ))); ");
                 }
             }
             return str.toString();
