@@ -168,6 +168,18 @@ public class Board{
 		}
 	}
 
+	public void writeBoard(File file) throws FileNotFoundException {
+		PrintWriter out = new PrintWriter(file);
+
+		for (int r = this.rows - 1; r >= 0; r--) {
+			for (int c = 0; c < this.cols; c++) {
+				out.print(cell[r][c]);
+			}
+			out.println();
+		}
+		out.close();
+	}
+
 	public static Board readBoard(File boardFile) throws FileNotFoundException {
 		Scanner file = new Scanner(boardFile);
 		int rows = 0;
