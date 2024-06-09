@@ -120,7 +120,6 @@ public class IterativePlayer extends Player {
             Iterator<Location> rGoalIter = this.getBoard().getReachedGoals().iterator();
             str.append("(");
             if (rGoalIter.hasNext()) {
-
                 while (rGoalIter.hasNext()) {
                     Location cur = rGoalIter.next();
                     if (rGoalIter.hasNext()) {

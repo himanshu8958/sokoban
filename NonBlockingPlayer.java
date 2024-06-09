@@ -56,7 +56,6 @@ public class NonBlockingPlayer extends Player implements Comparable {
                 }
             }
             System.out.println();
-
         }
     }
 
@@ -93,23 +92,26 @@ public class NonBlockingPlayer extends Player implements Comparable {
             File smvFile = new File(p.getBoard().getBoardFile().getPath() + ".smv");
             File outFile = new File(p.getBoard().getBoardFile().getPath() + ".out");
             File errFile = new File(p.getBoard().getBoardFile().getPath() + ".err");
-            System.out.println(smvFile.getPath());
-            p.getBoard().printBoard();
-            System.out.println();
-
+            /* System.out.println(smvFile.getPath()); */
+            /*
+             * p.getBoard().printBoard();
+             * System.out.println();
+             */
             p.writeSmv(smvFile);
             ModelChecker.checkInteractive(smvFile, p.getBound(), outFile, errFile);
             Play curPlay = Play.readTrace(p.getBoard(), outFile);
             if (!curPlay.isWin()) {
                 blockingPositions.add(p.getBoxLocation());
-                System.out.println("may be a blocking position: bmc");
-            }
-            else {
+                /* System.out.println("may be a blocking position: bmc"); */
+            } else {
                 this.addPositionReachesGoal(p.getBoxLocation());
-                System.out.println("not a blocking position");
-                System.out.println("positions that can reach a goal : " + this.getGoalPositions().size());
+                /*
+                 * System.out.println("not a blocking position");
+                 * System.out.println("positions that can reach a goal : " +
+                 * this.getGoalPositions().size());
+                 */
             }
-            System.out.println("..................................................");
+            /* System.out.println(".................................................."); */
         }
         return blockingPositions;
     }

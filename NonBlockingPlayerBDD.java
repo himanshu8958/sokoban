@@ -33,15 +33,18 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
         Board eyesOnPrize = this.getBoard().eyesOnPrize();
         boolean change = true;
         Set<Location> pottentialBlocks = super.getBlockingPositions();
-        System.out.println("================================================================");
-        System.out.println("BMC could not solve : " + pottentialBlocks.size());
+        /*
+         * System.out.println(
+         * "================================================================");
+         * System.out.println("BMC could not solve : " + pottentialBlocks.size());
+         */
         Set<NonBlockingPlayerBDD> pottentialBlockingPlayers = new TreeSet<NonBlockingPlayerBDD>();
         for (Location loc : pottentialBlocks) {
             if (this.getBoard().getGoals().contains(loc)) {
                 continue; // a goal cannot be a blocking position
             }
 
-            if (this.getBoard().isCorner(loc)) {
+            if (this.getBoard().isCorner(loc)) { // A corner is always a blocking position, unless it's a goal
                 blockingPositions.add(loc);
                 continue;
             } else {
@@ -58,22 +61,23 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
             File smvFile = new File(p.getBoard().getBoardFile().getPath() + ".smv");
             File outFile = new File(p.getBoard().getBoardFile().getPath() + ".out");
             File errFile = new File(p.getBoard().getBoardFile().getPath() + ".err");
-            System.out.println(smvFile.getPath());
-            p.getBoard().printBoard();
-            System.out.println();
+            /*
+             * System.out.println(smvFile.getPath());
+             * p.getBoard().printBoard();
+             */System.out.println();
 
             p.writeSmv(smvFile);
             ModelChecker.checkBdd(smvFile, outFile, errFile);
             Play curPlay = Play.readTrace(p.getBoard(), outFile);
             if (!curPlay.isWin()) {
                 blockingPositions.add(p.getBoxLocation());
-                System.out.println("blocking position for sure!");
+                /* System.out.println("blocking position for sure!"); */
             } else {
-                System.out.println("not a blocking position");
+                /* System.out.println("not a blocking position"); */
                 this.addPositionReachesGoal(p.getBoxLocation());
 
             }
-            System.out.println("..................................................");
+            /* System.out.println(".................................................."); */
         }
         return blockingPositions;
     }
