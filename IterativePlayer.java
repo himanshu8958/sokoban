@@ -30,7 +30,7 @@ public class IterativePlayer extends Player {
         int ctr = 0;
         while (!res.equals(aBoard) && res.getRemainingGoals().size() != 0) {
             aBoard = res;
-            System.out.println("Iteration # : " + ctr++);
+            System.out.println("Iteration # : " + ctr++ + "\n");
             res = IterativePlayer.oneIteration(aBoard, boardFile);
             System.out.print("Reached goals: ");
             for (Location loc : res.getReachedGoals()) {
@@ -77,9 +77,28 @@ public class IterativePlayer extends Player {
         return thisPlay.getWinnState().getBoard();
     }
 
+    private static Set<Location> blockingPositions = null;
+
+    private void resetBlockingPositions() {
+        IterativePlayer.blockingPositions = null;
+    }
+
+    public int getBlockingPositionRecalculatinFrequency() {
+        return 3;
+    }
+
+    public static int ctr = 0;
     private Set<Location> getBlockingPositions() throws IOException, InterruptedException {
-        NonBlockingPlayerBDD p = new NonBlockingPlayerBDD(this.getBoard().eyesOnPrize());
-        return p.getBlockingPositions();
+
+        if (ctr % (2 * this.getBlockingPositionRecalculatinFrequency()) == 0) {
+            this.resetBlockingPositions();
+        }
+        if (IterativePlayer.blockingPositions == null) {
+            NonBlockingPlayerBDD p = new NonBlockingPlayerBDD(this.getBoard().eyesOnPrize());
+            IterativePlayer.blockingPositions = p.getBlockingPositions();
+        }
+        ctr++;
+        return IterativePlayer.blockingPositions;
     }
 
     public String losingCondition() throws IOException, InterruptedException {
