@@ -349,12 +349,27 @@ public class Board{
 		return false;
 	}
 
+
 	public Set<Location> getFloorLocations() {
 		TreeSet<Location> ans = new TreeSet<Location>();
 		for (int r = 0; r < this.rows; r++) {
 			for (int c = 0; c < this.cols; c++) {
 				Location curLocation = new Location(r, c);
 				if (this.getCell(curLocation).equals(Board.floor)) {
+					ans.add(curLocation);
+				}
+			}
+		}
+		return ans;
+	}
+
+	public Set<Location> getPottentialFloorNonGoals() {
+		TreeSet<Location> ans = new TreeSet<Location>();
+		for (int r = 0; r < this.rows; r++) {
+			for (int c = 0; c < this.cols; c++) {
+				Location curLocation = new Location(r, c);
+				if (this.getCell(curLocation).equals(Board.floor) ||
+						this.getCell(curLocation).equals(Board.keeper)) {
 					ans.add(curLocation);
 				}
 			}

@@ -31,6 +31,10 @@ public class ModelChecker {
                     int exitVal = process.waitFor();
                     if (exitVal != 0) {
                         System.out.println("Abnormal Behaviour! Something bad happened.");
+                        for (String s : commands) {
+                            System.out.print(s);
+                        }
+                        System.out.println();
                     }
                 } catch (IOException | InterruptedException e) {
                     System.out.println("Something went wrong. Here are more details\n" + e.getMessage());
@@ -61,7 +65,11 @@ public class ModelChecker {
                     reader.close();
                     int exitVal = process.waitFor();
                     if (exitVal != 0) {
-                        System.out.println("Abnormal Behaviour! Something bad happened.");
+                        System.out.println("Abnormal Behaviour! Something bad happened : ");
+                        for (String s : commands) {
+                            System.out.print(s);
+                        }
+                        System.out.println();
                     }
                 } catch (IOException | InterruptedException e) {
                     System.out.println("Something went wrong. Here are more details\n" + e.getMessage());

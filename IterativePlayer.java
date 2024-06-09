@@ -11,19 +11,43 @@ public class IterativePlayer extends Player {
 
     public static void main(String[] args) throws IOException, InterruptedException {
         File boardFile = new File(args[0]);
-        File smvFile = new File(boardFile.getPath() + ".smv");
-        File ouFile = new File(boardFile.getPath() + ".out");
-        File errFile = new File(boardFile.getPath() + ".err");
+        /*
+         * File smvFile = new File(boardFile.getPath() + ".smv");
+         * File ouFile = new File(boardFile.getPath() + ".out");
+         * File errFile = new File(boardFile.getPath() + ".err");
+         */
         Board aBoard = Board.readBoard(boardFile);
         /* aBoard.printBoard(); */
 
-        IterativePlayer p = new IterativePlayer(aBoard, boardFile);
-        aBoard.printBoard();
-        p.writeSmv(smvFile);
-        ModelChecker.checkBdd(smvFile, ouFile, errFile);
-        Play thisPlay = Play.readTrace(aBoard, ouFile);
-        System.out.println("The  winning state");
-        thisPlay.getWinnState().getBoard().printBoard();
+        Board res = IterativePlayer.oneIteration(aBoard, boardFile);
+        System.out.print("Reached goals: ");
+        for (Location loc : res.getReachedGoals()) {
+            System.out.print(loc);
+        }
+        System.out.println();
+        System.out.println("Current state: ");
+        res.printBoard();
+        while (!res.equals(aBoard) && res.getRemainingGoals().size() != 0) {
+            aBoard = res;
+
+            res = IterativePlayer.oneIteration(aBoard, boardFile);
+            System.out.print("Reached goals: ");
+            for (Location loc : res.getReachedGoals()) {
+                System.out.print(loc);
+            }
+            System.out.println();
+            System.out.println("Current state: ");
+            res.printBoard();
+        }
+        /*
+         * IterativePlayer p = new IterativePlayer(aBoard, boardFile);
+         * aBoard.printBoard();
+         * p.writeSmv(smvFile);
+         * ModelChecker.checkBdd(smvFile, ouFile, errFile);
+         * Play thisPlay = Play.readTrace(aBoard, ouFile);
+         * System.out.println("The  winning state");
+         * thisPlay.getWinnState().getBoard().printBoard();
+         */
     }
 
     public IterativePlayer(Board b, File initBoardFile) {
@@ -46,6 +70,7 @@ public class IterativePlayer extends Player {
         File errFile = new File(IterativePlayer.getFileMentioningReached(curBoard, initBoardFile).getPath() + ".err");
 
         IterativePlayer plyr = new IterativePlayer(curBoard, initBoardFile);
+        plyr.writeSmv(smvFile);
         ModelChecker.checkBdd(smvFile, outFile, errFile);
         Play thisPlay = Play.readTrace(curBoard, outFile);
         return thisPlay.getWinnState().getBoard();
@@ -58,6 +83,21 @@ public class IterativePlayer extends Player {
 
     public String losingCondition() throws IOException, InterruptedException {
         StringBuilder str = new StringBuilder();
+        str.append("-- Blocking Positions : ");
+        for (Location l : this.getBlockingPositions()) {
+            str.append(l);
+        }
+        str.append('\n');
+        str.append("-- Reached Goals : ");
+        for (Location l : this.getBoard().getReachedGoals()) {
+            str.append(l);
+        }
+        str.append('\n');
+        str.append("-- Remaining Goals : ");
+        for (Location l : this.getBoard().getRemainingGoals()) {
+            str.append(l);
+        }
+        str.append('\n');
         str.append("LTLSPEC NAME oneMoreGoal := !((");
         if (this.getBlockingPositions().size() != 0) {
             Iterator<Location> iter = getBlockingPositions().iterator();

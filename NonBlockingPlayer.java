@@ -139,14 +139,24 @@ public class NonBlockingPlayer extends Player implements Comparable {
 
     private String atLeastABoxOnGoal() {
         StringBuilder str = new StringBuilder();
-        str.append("LTLSPEC NAME atLeastOneBoxOnGoal := G!(");
         Iterator<Location> iter = this.getGoalPositions().iterator();
+        int ctr = 0;
+        str.append("--");
+        while (iter.hasNext()) {
+            str.append(ctr++ + " : " + iter.next());
+        }
+        str.append("\n");
+
+        str.append("LTLSPEC NAME atLeastOneBoxOnGoal := G!(");
+        iter = this.getGoalPositions().iterator();
         while (iter.hasNext()) {
             Location curGoal = iter.next();
-            if (this.getBoard().getGoals().contains(curGoal))
+            if (this.getBoard().getGoals().contains(curGoal)) {
                 str.append(Board.boardHas(curGoal, Board.boxOnGoal));
-            else if (this.getBoard().getFloorLocations().contains(curGoal))
+            } else if (this.getBoard().getPottentialFloorNonGoals().contains(curGoal)) {
                 str.append(Board.boardHas(curGoal, Board.box));
+            }
+
             if (iter.hasNext()) {
                 str.append(" | ");
             } else {
