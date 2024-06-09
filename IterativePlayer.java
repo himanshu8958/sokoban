@@ -84,10 +84,12 @@ public class IterativePlayer extends Player {
     }
 
     public int getBlockingPositionRecalcFrequency() {
+
         return 3;
     }
 
     public static int ctr = 0;
+
     private Set<Location> getBlockingPositions() throws IOException, InterruptedException {
 
         if (ctr % (2 * this.getBlockingPositionRecalcFrequency()) == 0) {
