@@ -139,13 +139,14 @@ public class NonBlockingPlayer extends Player implements Comparable {
         this.goals.add(loc);
     }
 
-    private String atLeastABoxOnGoal() {
+    public String atLeastABoxOnGoal() {
         StringBuilder str = new StringBuilder();
+        str.append("--NonBlockingPlayer\n");
         Iterator<Location> iter = this.getGoalPositions().iterator();
         int ctr = 0;
-        str.append("--");
+        str.append("-- Positions that are reachable to goal");
         while (iter.hasNext()) {
-            str.append(ctr++ + " : " + iter.next());
+            str.append(iter.next() + ", ");
         }
         str.append("\n");
 

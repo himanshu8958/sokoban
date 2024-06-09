@@ -64,7 +64,8 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
             /*
              * System.out.println(smvFile.getPath());
              * p.getBoard().printBoard();
-             */System.out.println();
+             */
+            /* System.out.println(); */
 
             p.writeSmv(smvFile);
             ModelChecker.checkBdd(smvFile, outFile, errFile);
@@ -79,11 +80,13 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
             }
             /* System.out.println(".................................................."); */
         }
+        System.out.println("Exiting NonBlockingBDD::getBlock");
         return blockingPositions;
     }
 
-    private String atLeastABoxOnGoal() {
+    public String atLeastABoxOnGoal() {
         StringBuilder str = new StringBuilder();
+        str.append("--NonBlockingBDDPlayer\n");
         Iterator<Location> iter = this.getGoalPositions().iterator();
         int ctr = 0;
         str.append("--");

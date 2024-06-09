@@ -81,10 +81,10 @@ public class IterativePlayer extends Player {
 
     private void resetBlockingPositions() {
         IterativePlayer.blockingPositions = null;
+        IterativePlayer.ctr = 0;
     }
 
     public int getBlockingPositionRecalcFrequency() {
-
         return 3;
     }
 
@@ -98,6 +98,10 @@ public class IterativePlayer extends Player {
         if (IterativePlayer.blockingPositions == null) {
             NonBlockingPlayerBDD p = new NonBlockingPlayerBDD(this.getBoard().eyesOnPrize());
             IterativePlayer.blockingPositions = p.getBlockingPositions();
+            if (ctr == 0) {
+                System.out.println("Current Blocking Positions");
+                p.printBlockingPostions(IterativePlayer.blockingPositions);
+            }
         }
         ctr++;
         return IterativePlayer.blockingPositions;
@@ -105,6 +109,7 @@ public class IterativePlayer extends Player {
 
     public String losingCondition() throws IOException, InterruptedException {
         StringBuilder str = new StringBuilder();
+        str.append("--Iterative Player\n");
         str.append("-- Blocking Positions : ");
         for (Location l : this.getBlockingPositions()) {
             str.append(l);
