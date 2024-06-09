@@ -1,9 +1,11 @@
-
 import java.util.*;
 import java.io.*;
 
 public class NonBlockingPlayer extends Player implements Comparable {
     Location boxLocation;
+
+    // Locations of boxes from which a goal is reachable
+    public static Set<Location> goals = null;
 
     public int compareTo(Object obj) {
         if (!(obj instanceof NonBlockingPlayer)) {
@@ -64,7 +66,6 @@ public class NonBlockingPlayer extends Player implements Comparable {
     }
 
 
-
     public Set<Location> getBlockingPositions() throws IOException, InterruptedException {
         TreeSet<Location> blockingPositions = new TreeSet<Location>();
         Board eyesOnPrize = this.getBoard().eyesOnPrize();
@@ -80,7 +81,23 @@ public class NonBlockingPlayer extends Player implements Comparable {
                 continue;
             } else {
                 Board singleBox = eyesOnPrize.copy();
-                singleBox.setCell(loc, Board.box);
+                if (singleBox.isKeeper(loc) || singleBox.isKeeperOnGoal(loc)) { // checkin if keepr's loc is
+                                                                                // blocked
+                    Location nuKeeperLoc = null;
+                    for (Location l : new HashSet<Location>(singleBox.getFloorLocations())) {
+                        if (l.equals(loc))
+                            continue;
+                        nuKeeperLoc = l;
+                    }
+                    if (singleBox.isKeeper(singleBox.getKeeperLocation())) {
+                        singleBox.setCell(singleBox.getKeeperLocation(), Board.box);
+                    } else if (singleBox.isKeeperOnGoal(singleBox.getKeeperLocation())) {
+                        singleBox.setCell(singleBox.getKeeperLocation(), Board.boxOnGoal);
+                    }
+                    singleBox.setCell(nuKeeperLoc, Board.keeper);
+                } else {
+                    singleBox.setCell(loc, Board.box);
+                }
                 File singleBoxFile = new File(singleBox.getBoardFile().getPath() + loc);
                 singleBox.setBoardFile(singleBoxFile);
                 NonBlockingPlayer oneBoxPlay = new NonBlockingPlayer(singleBox, loc);
@@ -127,7 +144,7 @@ public class NonBlockingPlayer extends Player implements Comparable {
         return atLeastABoxOnGoal();
     }
 
-    public static Set<Location> goals = null;
+
 
     public Set<Location> getGoalPositions() {
         if (this.goals == null)

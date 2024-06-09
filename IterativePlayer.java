@@ -85,7 +85,7 @@ public class IterativePlayer extends Player {
     }
 
     public int getBlockingPositionRecalcFrequency() {
-        return 3;
+        return 1;
     }
 
     public static int ctr = 0;

@@ -122,13 +122,43 @@ public class Board{
 		this.hashcode = -1;
 	}
 
+	public boolean isFloor(Location l) {
+		return this.getCell(l).equals(Board.floor);
+	}
+
+	public boolean isGoal(Location l) {
+		return this.getCell(l).equals(Board.goal);
+	}
+
+	public boolean isBoxOnGoal(Location l) {
+		return this.getCell(l).equals(Board.boxOnGoal);
+	}
+
+	public boolean isKeeperOnGoal(Location l) {
+		return this.getCell(l).equals(Board.keeperOnGoal);
+	}
+
+	public boolean isWall(Location l) {
+		return this.getCell(l).equals(Board.wall);
+	}
+
+	public boolean isKeeper(Location l) {
+		return this.getCell(l).equals(Board.keeper);
+	}
+
+	public boolean isBox(Location l) {
+		return this.getCell(l).equals(Board.box);
+	}
 	public Location getKeeperLocation(){
-		for ( int r = 0; r < rows; r++){
-			for ( int c = 0 ; c<cols; c++){
-				if(cell[r][c] == '@' | cell[r][c] == '+')
-					return(new Location(r, c));
+		for (int r = 0; r < rows; r++) {
+			for (int c = 0; c < cols; c++) {
+				if (cell[r][c] == '@' | cell[r][c] == '+')
+					return (new Location(r, c));
 			}
 		}
+		System.out.println(this.boardFile.getPath());
+		this.printBoard();
+
 		return null;
 	}
 	public static String getBoard(Location loc) {
@@ -354,7 +384,7 @@ public class Board{
 		for (int r = 0; r < this.rows; r++) {
 			for (int c = 0; c < this.cols; c++) {
 				Location curLocation = new Location(r, c);
-				if (this.getCell(curLocation).equals(Board.floor)) {
+				if (this.getCell(curLocation).equals(Board.floor) || this.getCell(curLocation).equals(Board.keeper)) {
 					ans.add(curLocation);
 				}
 			}

@@ -48,12 +48,34 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
                 blockingPositions.add(loc);
                 continue;
             } else {
-                Board singleBox = eyesOnPrize.copy();
-                singleBox.setCell(loc, Board.box);
-                File singleBoxFile = new File(singleBox.getBoardFile().getPath() + loc);
-                singleBox.setBoardFile(singleBoxFile);
-                NonBlockingPlayerBDD oneBoxPlay = new NonBlockingPlayerBDD(singleBox, loc);
-                pottentialBlockingPlayers.add(oneBoxPlay);
+                if (this.getBoard().isCorner(loc)) {
+                    blockingPositions.add(loc);
+                    continue;
+                } else {
+                    Board singleBox = eyesOnPrize.copy();
+                    if (singleBox.isKeeper(loc) || singleBox.isKeeperOnGoal(loc)) { // checkin if keepr's loc is
+                                                                                    // blocked
+                        Location nuKeeperLoc = null;
+                        for (Location l : new HashSet<Location>(singleBox.getFloorLocations())) {
+                            if (l.equals(loc))
+                                continue;
+                            nuKeeperLoc = l;
+                        }
+                        if (singleBox.isKeeper(singleBox.getKeeperLocation())) {
+                            singleBox.setCell(singleBox.getKeeperLocation(), Board.box);
+                        } else if (singleBox.isKeeperOnGoal(singleBox.getKeeperLocation())) {
+                            singleBox.setCell(singleBox.getKeeperLocation(), Board.boxOnGoal);
+                        }
+                        singleBox.setCell(nuKeeperLoc, Board.keeper);
+                    } else {
+                        singleBox.setCell(loc, Board.box);
+                    }
+                    singleBox.setCell(loc, Board.box);
+                    File singleBoxFile = new File(singleBox.getBoardFile().getPath() + loc);
+                    singleBox.setBoardFile(singleBoxFile);
+                    NonBlockingPlayerBDD oneBoxPlay = new NonBlockingPlayerBDD(singleBox, loc);
+                    pottentialBlockingPlayers.add(oneBoxPlay);
+                }
             }
         }
 
