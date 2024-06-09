@@ -311,7 +311,6 @@ public class Board{
 				if (ret.getCell(curLocation).equals(Board.box)) {
 					ret.setCell(curLocation, Board.floor);
 				} else if (ret.getCell(curLocation).equals(Board.boxOnGoal) ||
-				/* ret.getCell(curLocation).equals(Board.keeperOnGoal) || */
 						ret.getCell(curLocation).equals(Board.goal)) {
 					ret.setCell(curLocation, Board.goal);
 				}

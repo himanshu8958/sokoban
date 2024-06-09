@@ -27,9 +27,10 @@ public class IterativePlayer extends Player {
         System.out.println();
         System.out.println("Current state: ");
         res.printBoard();
+        int ctr = 0;
         while (!res.equals(aBoard) && res.getRemainingGoals().size() != 0) {
             aBoard = res;
-
+            System.out.println("Iteration # : " + ctr++);
             res = IterativePlayer.oneIteration(aBoard, boardFile);
             System.out.print("Reached goals: ");
             for (Location loc : res.getReachedGoals()) {
