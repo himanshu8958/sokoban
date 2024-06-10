@@ -24,7 +24,11 @@ public class Location implements Comparable {
             return 0;
 
     }
-    
+
+    public int getDistance(Location l) {
+        return Math.abs(this.x - l.x) + Math.abs(this.y - l.y);
+    }
+
     public Location(int x, int y) {
         this.x = x;
         this.y = y;
