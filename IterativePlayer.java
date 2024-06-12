@@ -10,45 +10,26 @@ public class IterativePlayer extends Player {
     }
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        File boardFile = new File(args[0]);
-        /*
-         * File smvFile = new File(boardFile.getPath() + ".smv");
-         * File ouFile = new File(boardFile.getPath() + ".out");
-         * File errFile = new File(boardFile.getPath() + ".err");
-         */
-        Board aBoard = Board.readBoard(boardFile);
-        /* aBoard.printBoard(); */
+        File inputBoardFile = new File(args[0]);
+        Board input = Board.readBoard(inputBoardFile);
+        Board result = input;
+        int ctr = 1;
+        Board perviousResult = input;
+        do {
+            perviousResult = result;
+            result = IterativePlayer.oneIteration(result, inputBoardFile);
+            System.out.println("after Iteration : " + ctr++ + ": ");
+            result.printBoard();
 
-        Board res = IterativePlayer.oneIteration(aBoard, boardFile);
-        System.out.print("Reached goals: ");
-        for (Location loc : res.getReachedGoals()) {
-            System.out.print(loc);
+        } while (!result.equals(perviousResult) & result.getRemainingGoals().size() > 0);
+        if (result.getRemainingGoals().size() > 0) {
+            System.out.println("All goals cnnot reach goals, pointless to move ahead");
+        } else {
+
+            System.out.println("all goals covered");
+            System.out.println("reached goals : " + result.getReachedGoals().size());
         }
-        System.out.println();
-        System.out.println("Current state: ");
-        res.printBoard();
-        int ctr = 0;
-        while (!res.equals(aBoard) && res.getRemainingGoals().size() != 0) {
-            aBoard = res;
-            System.out.println("Iteration # : " + ctr++ + "\n");
-            res = IterativePlayer.oneIteration(aBoard, boardFile);
-            System.out.print("Reached goals: ");
-            for (Location loc : res.getReachedGoals()) {
-                System.out.print(loc);
-            }
-            System.out.println();
-            System.out.println("Current state: ");
-            res.printBoard();
-        }
-        /*
-         * IterativePlayer p = new IterativePlayer(aBoard, boardFile);
-         * aBoard.printBoard();
-         * p.writeSmv(smvFile);
-         * ModelChecker.checkBdd(smvFile, ouFile, errFile);
-         * Play thisPlay = Play.readTrace(aBoard, ouFile);
-         * System.out.println("The  winning state");
-         * thisPlay.getWinnState().getBoard().printBoard();
-         */
+
     }
 
     public IterativePlayer(Board b, File initBoardFile) {
@@ -99,8 +80,10 @@ public class IterativePlayer extends Player {
             NonBlockingPlayerBDD p = new NonBlockingPlayerBDD(this.getBoard().eyesOnPrize());
             IterativePlayer.blockingPositions = p.getBlockingPositions();
             if (ctr == 0) {
-                System.out.println("Current Blocking Positions");
-                p.printBlockingPostions(IterativePlayer.blockingPositions);
+                /*
+                 * System.out.println("Current Blocking Positions");
+                 * p.printBlockingPostions(IterativePlayer.blockingPositions);
+                 */
             }
         }
         ctr++;
@@ -108,6 +91,86 @@ public class IterativePlayer extends Player {
     }
 
     public String losingCondition() throws IOException, InterruptedException {
+        return this.way2();
+    }
+
+    public String way2() throws IOException, InterruptedException {
+        StringBuilder str = new StringBuilder();
+        str.append("--Iterative Player; way 2\n");
+        str.append("-- Blocking Positions : ");
+        Set<Location> blockingPos = this.getBlockingPositions();
+        for (Location l : blockingPos) {
+            str.append(l);
+            str.append(", ");
+        }
+        str.append('\n');
+        str.append("-- Reached Goals : ");
+        for (Location l : this.getBoard().getReachedGoals()) {
+            str.append(l);
+            str.append(", ");
+        }
+        str.append('\n');
+        str.append("-- Remaining Goals : ");
+        for (Location l : this.getBoard().getRemainingGoals()) {
+            str.append(l);
+            str.append(", ");
+        }
+        str.append('\n');
+        str.append("LTLSPEC NAME oneMoreGoal := !(");
+        if (blockingPos.size() > 0) {
+            str.append("G{");
+            Iterator<Location> iter = getBlockingPositions().iterator();
+            // do not go to the blocking positions
+            while (iter.hasNext()) {
+                Location cur = iter.next();
+                str.append("(");
+                str.append(Board.boardHas(cur, Board.floor) + " | ");
+                str.append(Board.boardHas(cur, Board.keeper) + " )");
+                if (iter.hasNext()) {
+                    str.append(" & ");
+                } else {
+                    str.append("}");
+                }
+            }
+            str.append(" & F(");
+        } else {
+            str.append("F(");
+        }
+
+        // must keep the goals that were achieved
+        if (this.getBoard().getReachedGoals().size() > 0) {
+            Iterator<Location> rGoalIter = this.getBoard().getReachedGoals().iterator();
+            if (rGoalIter.hasNext()) {
+                str.append("(");
+                while (rGoalIter.hasNext()) {
+                    Location cur = rGoalIter.next();
+                    if (rGoalIter.hasNext()) {
+                        str.append(Board.boardHas(cur, Board.boxOnGoal) + " & ");
+                    } else {
+                        str.append(Board.boardHas(cur, Board.boxOnGoal) + " ) & ");
+                    }
+                }
+                /* str.append(")"); */
+            }
+        }
+
+        if (this.getBoard().getRemainingGoals().size() > 0) {
+            Iterator<Location> nGoalIter = this.getBoard().getRemainingGoals().iterator();
+            System.out.println("remaining goals : " + this.getBoard().getRemainingGoals().size());
+
+            while (nGoalIter.hasNext()) {
+                Location cur = nGoalIter.next();
+                if (nGoalIter.hasNext()) {
+                    str.append(Board.boardHas(cur, Board.boxOnGoal) + " | ");
+                } else {
+                    str.append(Board.boardHas(cur, Board.boxOnGoal) + " ));");
+                }
+            }
+        }
+        return str.toString();
+    }
+
+    public String way1() throws IOException, InterruptedException {
         StringBuilder str = new StringBuilder();
         str.append("--Iterative Player\n");
         str.append("-- Blocking Positions : ");

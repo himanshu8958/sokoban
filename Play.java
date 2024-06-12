@@ -125,10 +125,10 @@ public class Play {
     
 
     public static void main(String[] args) throws IOException{
-        File boardFile = new File("Boards/board7");
+        File boardFile = new File("Boards/level1");
         Board b = Board.readBoard(boardFile);
         
-        Play aPlay = Play.readTrace(b, new File("Boards/board7(2, 6).out"));
+        Play aPlay = Play.readTrace(b, new File("Boards/level1.out"));
         aPlay.playThePlay();
     }
     

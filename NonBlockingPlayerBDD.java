@@ -102,7 +102,7 @@ public class NonBlockingPlayerBDD extends NonBlockingPlayer {
             }
             /* System.out.println(".................................................."); */
         }
-        System.out.println("Exiting NonBlockingBDD::getBlock");
+        /* System.out.println("Exiting NonBlockingBDD::getBlock"); */
         return blockingPositions;
     }
 
