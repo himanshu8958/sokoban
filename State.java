@@ -17,6 +17,20 @@ public class State{
     int row;
     int col;
 
+    public int hashCode() {
+        return this.board.hashCode() * 3 + direction.hashCode() * 5 + Boolean.valueOf(this.won).hashCode() * 7
+                + Boolean.valueOf(this.loopStarted).hashCode() * 11;
+    }
+
+    public boolean equals(Object other) {
+        if (!(other instanceof State)) {
+            return false;
+        }
+        State o = (State) other;
+        return this.board.equals(o.board) && this.direction.equals(o.direction)
+                && this.goalsCovered == o.goalsCovered &&
+                this.row == o.row && this.col == o.col;
+    }
 
     /* copy constructor */
     public State (State s) {
@@ -31,9 +45,11 @@ public class State{
         this.boxDown = s.boxDown;
         this.boxLeft = s.boxLeft;
         this.boxRight = s.boxRight;
+        this.won = s.won;
+        this.loopStarted = s.loopStarted;
         this.row = s.row;
         this.col = s.col;
-        this.won = s.won;        
+        this.won = s.won;
     }
 
     public String toString(){

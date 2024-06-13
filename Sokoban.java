@@ -29,14 +29,31 @@ public class Sokoban {
                     if (thisPlay.isWin()) {
                         System.out.println("There exists a way to solve this board");
                         System.out.println(thisPlay.LURD());
+                        /* thisPlay.playThePlay(); */
                     } else {
                         System.out.println("This board is unsolvable");
                     }
 
                 } else if (args[0].equals("-itr") || args[0].equals("-iterative")) {
                     /* Q4 */
-                    IterativePlayer plyr = new IterativePlayer(board, boardFile);
-                    plyr.writeSmv(smvFile);
+                    Board input = Board.readBoard(boardFile);
+                    Board result = input;
+                    int ctr = 1;
+                    Board perviousResult = input;
+                    do {
+                        perviousResult = result;
+                        result = IterativePlayer.oneIteration(result, boardFile);
+                        System.out.println("after Iteration : " + ctr++ + ": ");
+                        result.printBoard();
+
+                    } while (!result.equals(perviousResult) & result.getRemainingGoals().size() > 0);
+                    if (result.getRemainingGoals().size() > 0) {
+                        System.out.println("All goals cnnot reach goals, pointless to move ahead");
+                    } else {
+
+                        System.out.println("all goals covered");
+                        System.out.println("reached goals : " + result.getReachedGoals().size());
+                    }
                 }
             default:
                 break;
