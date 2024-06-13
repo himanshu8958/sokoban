@@ -14,8 +14,12 @@ public class Play {
 
     public StringBuilder LURD() {
         StringBuilder str = new StringBuilder();
-        for (int ctr = 0; ctr < states.size(); ctr++) {
+        for (int ctr = 1; ctr < states.size(); ctr++) {
             State curState = states.get(ctr + 1);
+            if (curState.equals(winnigState)) {
+                str.append(curState.direction);
+                return str;
+            }
             str.append(curState.direction);
             if (ctr < states.size() - 1)
                 str.append(", ");
