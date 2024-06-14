@@ -2,9 +2,12 @@ import java.io.*;
 
 public class Sokoban {
     public static void main(String[] args) throws IOException, InterruptedException {
-        for (int ctr = 0; ctr < args.length; ctr++) {
-            System.out.println(ctr + " " + args[ctr]);
-        }
+        /*
+         * for (int ctr = 0; ctr < args.length; ctr++) {
+         * System.out.println(ctr + " " + args[ctr]);
+         * }
+         */
+        long startTime = System.nanoTime();
         switch (args.length) {
             case 0:
                 System.out.println(help());
@@ -26,9 +29,10 @@ public class Sokoban {
                     player.writeSmv(smvFile);
                     ModelChecker.checkBdd(smvFile, traceFile, errFile);
                     Play thisPlay = Play.readTrace(board, traceFile);
+
                     if (thisPlay.isWin()) {
                         System.out.println("There exists a way to solve this board");
-                        System.out.println(thisPlay.LURD());
+                        System.out.println("Moves : " + thisPlay.LURD());
                         /* thisPlay.playThePlay(); */
                     } else {
                         System.out.println("This board is unsolvable");
@@ -48,7 +52,7 @@ public class Sokoban {
 
                     } while (!result.equals(perviousResult) & result.getRemainingGoals().size() > 0);
                     if (result.getRemainingGoals().size() > 0) {
-                        System.out.println("All goals cnnot reach goals, pointless to move ahead");
+                        System.out.println("All goals cannot reach goals, pointless to move ahead");
                     } else {
 
                         System.out.println("all goals covered");
@@ -58,6 +62,7 @@ public class Sokoban {
             default:
                 break;
         }
+        System.out.println("Total time taken : " + (System.nanoTime() - startTime) / 1000000 + " ms");
     }
 
     private static String help() {
