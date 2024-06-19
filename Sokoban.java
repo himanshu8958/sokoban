@@ -45,8 +45,11 @@ public class Sokoban {
                     int ctr = 1;
                     Board perviousResult = input;
                     do {
+                        long iterStartTime = System.nanoTime();
                         perviousResult = result;
                         result = IterativePlayer.oneIteration(result, boardFile);
+                        System.out.println("time taken in this iteration  : "
+                                + (System.nanoTime() - iterStartTime) / 1000000 + " ms");
                         System.out.println("after Iteration : " + ctr++ + ": ");
                         result.printBoard();
 
